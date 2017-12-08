@@ -9,5 +9,5 @@ add_library(utils
     ./src/client.cpp
 )
 
-add_executable(strategy_pattern src/main.cpp)
+add_executable(strategy_pattern ./src/unique_strategy.cpp)
 target_link_libraries(strategy_pattern utils)
