@@ -1,6 +1,7 @@
 #ifndef CONCRETE_STRATEGY_A_H
 #define CONCRETE_STRATEGY_A_H
 
+#include <iostream>
 #include "strategy.h"
 
 class ConcreteStrategyA : public Strategy
