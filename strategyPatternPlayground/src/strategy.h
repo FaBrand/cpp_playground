@@ -4,6 +4,7 @@
 class Strategy
 {
   public:
+    virtual ~Strategy() = default;
     virtual void DoWork() = 0;
 };
 
