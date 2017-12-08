@@ -4,4 +4,4 @@
 void ConcreteStrategyA::DoWork()
 {
     std::cout << "AAAA" << std::endl;
-};
+}
