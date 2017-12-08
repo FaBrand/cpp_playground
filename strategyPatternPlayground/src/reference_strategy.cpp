@@ -1,7 +1,3 @@
-#include <cassert>
-#include <functional>
-#include <iostream>
-#include <string>
 #include "concrete_strategy_a.h"
 #include "concrete_strategy_b.h"
 #include "reference_client.h"

@@ -1,9 +1,9 @@
 #include <cassert>
-#include <iostream>
-#include <string>
+#include <memory>
 #include "client.h"
 #include "concrete_strategy_a.h"
 #include "concrete_strategy_b.h"
+#include "strategy.h"
 
 int main(int argc, char* argv[])
 {
