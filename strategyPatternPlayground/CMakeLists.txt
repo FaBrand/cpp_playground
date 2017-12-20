@@ -9,7 +9,7 @@ add_library(utils
     ./src/util_types/reference_client.cpp
     ./src/util_types/client.cpp
     ./src/util_types/free_strategies.cpp
-    ./src/util_types/free_client.cpp
+    ./src/util_types/free_context.cpp
 )
 target_include_directories(utils
     PUBLIC
