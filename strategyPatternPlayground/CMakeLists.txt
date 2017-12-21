@@ -8,6 +8,8 @@ add_library(utils
     ./src/util_types/concrete_strategy_b.cpp
     ./src/util_types/reference_client.cpp
     ./src/util_types/client.cpp
+    ./src/util_types/free_strategies.cpp
+    ./src/util_types/free_context.cpp
 )
 target_include_directories(utils
     PUBLIC
@@ -22,3 +24,6 @@ target_link_libraries(strategy_pattern2 utils)
 
 add_executable(reference_strategy_pattern ./src/reference_strategy.cpp)
 target_link_libraries(reference_strategy_pattern  utils)
+
+add_executable(free_strategy_pattern ./src/free_strategy.cpp)
+target_link_libraries(free_strategy_pattern  utils)
