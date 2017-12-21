@@ -76,11 +76,11 @@ void UdpServer::Stop()
         return;
     }
 
-    GacefullyStopService();
+    GracefullyStopService();
     PrepareServiceForNextStart();
 }
 
-void UdpServer::GacefullyStopService()
+void UdpServer::GracefullyStopService()
 {
     io_service_.stop();
     thread_->join();

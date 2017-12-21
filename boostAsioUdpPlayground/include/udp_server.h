@@ -42,7 +42,7 @@ class UdpServer
     bool IsServiceRunning() const;
     void StartServiceAsynchronously();
     void PrepareServiceForNextStart();
-    void GacefullyStopService();
+    void GracefullyStopService();
 };
 
 #endif  // UDP_SERVER_H
