@@ -17,30 +17,27 @@ namespace sml = boost::sml;
     };
 
 // events
-EVENT(release)
-EVENT(ack)
-EVENT(fin)
-EVENT(timeout)
+EVENT(ActivationIntent)
+EVENT(DeactivationIntent)
 
 // guards
-const auto is_ack_valid = [](const ack&) { return true; };
-const auto is_fin_valid = [](const fin&) { return true; };
+const auto is_activation_allowed = [](const ActivationIntent&) { return true; };
 
 // actions
-const auto send_fin = [] { std::cout << "Send fin" << std::endl; };
-const auto send_ack = [] { std::cout << "Send ack" << std::endl; };
+const auto active_entry_action = [] { std::cout << "active_entry_action" << std::endl; };
+// const auto active_during_action = [] { std::cout << "active_during_action" << std::endl; };
+const auto inactive_entry_action = [] { std::cout << "inactive_entry_action" << std::endl; };
+// const auto inactive_during_action = [] { std::cout << "inactive_during_action" << std::endl; };
 
-struct hello_world
+struct OnOffMachine
 {
     auto operator()() const
     {
         using namespace sml;
         // clang-format off
         return make_transition_table(
-          *"established"_s + event<release> / send_fin = "fin wait 1"_s,
-           "fin wait 1"_s + event<ack> [ is_ack_valid ] = "fin wait 2"_s,
-           "fin wait 2"_s + event<fin> [ is_fin_valid ] / send_ack = "timed wait"_s,
-           "timed wait"_s + event<timeout> / send_ack = X
+          *"off state"_s + event<ActivationIntent> [is_activation_allowed]/ active_entry_action = "on state"_s,
+           "on state"_s + event<DeactivationIntent> / inactive_entry_action = "off state"_s
         );
         // clang-format on
     }
@@ -50,21 +47,15 @@ int main()
 {
     using namespace sml;
 
-    sm<hello_world> sm;
+    sm<OnOffMachine> sm;
     static_assert(1 == sizeof(sm), "sizeof(sm) != 1b");
-    assert(sm.is("established"_s));
+    assert(sm.is("off state"_s));
 
-    sm.process_event(release{});
-    assert(sm.is("fin wait 1"_s));
+    sm.process_event(ActivationIntent{});
+    assert(sm.is("on state"_s));
 
-    sm.process_event(ack{});
-    assert(sm.is("fin wait 2"_s));
-
-    sm.process_event(fin{});
-    assert(sm.is("timed wait"_s));
-
-    sm.process_event(timeout{});
-    assert(sm.is(X));  // released
+    sm.process_event(ActivationIntent{});
+    assert(sm.is("off state"_s));
 
     return 0;
 }
