@@ -15,12 +15,6 @@ EVENT(DeactivationIntent)
 
 // guards
 const auto is_activation_allowed = [](const ActivationIntent&) { return true; };
-const auto is_initialized = [x = 0]() mutable
-{
-    std::cout << "asked initialization" << std::endl;
-    x++;
-    return x > 2;
-};
 
 // states
 using namespace sml;
