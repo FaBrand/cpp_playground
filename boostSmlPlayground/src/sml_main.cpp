@@ -2,6 +2,40 @@
 #include <iostream>
 #include <boost/sml.hpp>
 
+class BaseDependency
+{
+  public:
+    virtual ~BaseDependency() = default;
+    virtual void DoStuff() = 0;
+};
+
+class ConcreteDependency : public BaseDependency
+{
+  public:
+    void DoStuff() override
+    {
+        std::cout << "Did stuff" << std::endl;
+    }
+};
+
+class OtherConcreteDependency : public BaseDependency
+{
+  public:
+    void DoStuff() override
+    {
+        std::cout << "Did other stuff" << std::endl;
+    }
+};
+
+// Wrapper for Context for Statemachine
+struct Context
+{
+    BaseDependency& a;
+    BaseDependency& b;
+    BaseDependency& c;
+    BaseDependency& d;
+};
+
 namespace sml = boost::sml;
 
 #define EVENT(x) \
@@ -14,7 +48,11 @@ EVENT(ActivationIntent)
 EVENT(DeactivationIntent)
 
 // guards
-const auto is_activation_allowed = [](const ActivationIntent&) { return true; };
+const auto is_activation_allowed = [](Context& dep, const ActivationIntent&) {
+    dep.a.DoStuff();
+    dep.b.DoStuff();
+    return true;
+};
 
 // states
 using namespace sml;
@@ -42,7 +80,11 @@ int main()
 {
     using namespace sml;
 
-    sm<OnOffMachine> sm;
+    ConcreteDependency foo;
+    OtherConcreteDependency Foo;
+    Context ctx{foo, Foo, foo, Foo};
+
+    sm<OnOffMachine> sm{ctx};
     assert(sm.is(off));
 
     sm.process_event(ActivationIntent{});
