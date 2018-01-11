@@ -1,10 +1,3 @@
-//
-// Copyright (c) 2016-2017 Kris Jusiak (kris at jusiak dot net)
-//
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
-//
 #include <cassert>
 #include <iostream>
 #include <boost/sml.hpp>
@@ -22,24 +15,32 @@ EVENT(DeactivationIntent)
 
 // guards
 const auto is_activation_allowed = [](const ActivationIntent&) { return true; };
+const auto is_initialized = [x = 0]() mutable
+{
+    std::cout << "asked initialization" << std::endl;
+    x++;
+    return x > 2;
+};
 
-// actions
-const auto active_entry_action = [] { std::cout << "active_entry_action" << std::endl; };
-// const auto active_during_action = [] { std::cout << "active_during_action" << std::endl; };
-const auto inactive_entry_action = [] { std::cout << "inactive_entry_action" << std::endl; };
-// const auto inactive_during_action = [] { std::cout << "inactive_during_action" << std::endl; };
+// states
+using namespace sml;
+auto init = "initial state"_s;
+auto off = "off state"_s;
+auto on = "on state"_s;
 
 struct OnOffMachine
 {
     auto operator()() const
     {
         using namespace sml;
-        // clang-format off
-        return make_transition_table(
-          *"off state"_s + event<ActivationIntent> [is_activation_allowed]/ active_entry_action = "on state"_s,
-           "on state"_s + event<DeactivationIntent> / inactive_entry_action = "off state"_s
-        );
-        // clang-format on
+        return make_transition_table(*init / [] { std::cout << "Left Init" << std::endl; } = off,
+                                     init + sml::on_exit<_> / []() { std::cout << "Init State exit" << std::endl; },
+                                     off + event<ActivationIntent>[is_activation_allowed] = on,
+                                     off + sml::on_exit<_> / []() { std::cout << "Off State exit" << std::endl; },
+                                     off + sml::on_entry<_> / []() { std::cout << "Off State entry" << std::endl; },
+                                     on + event<DeactivationIntent> = off,
+                                     on + sml::on_exit<_> / []() { std::cout << "On State exit" << std::endl; },
+                                     on + sml::on_entry<_> / []() { std::cout << "On State entry" << std::endl; });
     }
 };
 
@@ -48,14 +49,13 @@ int main()
     using namespace sml;
 
     sm<OnOffMachine> sm;
-    static_assert(1 == sizeof(sm), "sizeof(sm) != 1b");
-    assert(sm.is("off state"_s));
+    assert(sm.is(off));
 
     sm.process_event(ActivationIntent{});
-    assert(sm.is("on state"_s));
+    assert(sm.is(on));
 
-    sm.process_event(ActivationIntent{});
-    assert(sm.is("off state"_s));
+    sm.process_event(DeactivationIntent{});
+    assert(sm.is(off));
 
     return 0;
 }
