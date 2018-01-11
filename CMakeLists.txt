@@ -14,4 +14,5 @@ add_compile_options(-Wall -Wextra -Wpedantic)
 
 add_subdirectory(strategyPatternPlayground)
 add_subdirectory(boostAsioUdpPlayground)
+add_subdirectory(boostSmlPlayground)
 
