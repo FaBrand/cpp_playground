@@ -11,19 +11,16 @@
 
 namespace sml = boost::sml;
 
+#define EVENT(x) \
+    struct x     \
+    {            \
+    };
+
 // events
-struct release
-{
-};
-struct ack
-{
-};
-struct fin
-{
-};
-struct timeout
-{
-};
+EVENT(release)
+EVENT(ack)
+EVENT(fin)
+EVENT(timeout)
 
 // guards
 const auto is_ack_valid = [](const ack&) { return true; };
