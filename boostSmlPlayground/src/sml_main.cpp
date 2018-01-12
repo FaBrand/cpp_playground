@@ -4,33 +4,29 @@
 #include <boost/sml.hpp>
 #include <cxxabi.h>
 
-class BaseDependency
+class AbstractDependency
 {
   public:
-    virtual ~BaseDependency() = default;
+    virtual ~AbstractDependency() = default;
     virtual void DoStuff() = 0;
 };
 
-class ConcreteDependency : public BaseDependency
+class ConcreteDependency : public AbstractDependency
 {
   public:
     void DoStuff() override
     {
-        std::cout << "Did stuff" << std::endl;
+        std::cout << "Did stuff in dependency" << std::endl;
     }
 };
 
 // Wrapper for Context for Statemachine
 struct Context
 {
-    BaseDependency& a;
-    BaseDependency& b;
-    BaseDependency& c;
-    BaseDependency& d;
+    AbstractDependency& a;
 };
 
 namespace sml = boost::sml;
-
 #define EVENT(x) \
     struct x     \
     {            \
@@ -39,11 +35,9 @@ namespace sml = boost::sml;
 // events
 EVENT(ActivationIntent)
 EVENT(DeactivationIntent)
-EVENT(Active)
-EVENT(Inactive)
 
 // guards
-const auto is_activation_allowed = [](const ActivationIntent&) { return true; };
+const auto is_activation_allowed = [](const ActivationIntent&, Context&) { return true; };
 
 // states
 using namespace sml;
@@ -57,68 +51,69 @@ struct OnOffMachine
     {
         using namespace sml;
         return make_transition_table(*off + event<ActivationIntent>[is_activation_allowed] = on,
-                                     off + sml::on_exit<_> / []() { std::cout << "Off State exit" << std::endl; },
-                                     off +
-                                         sml::on_entry<_> /
-                                             [](Context& ctx) {
-                                                 ctx.a.DoStuff();
-                                                 std::cout << "Off State entry" << std::endl;
-                                             },
+                                     off + sml::on_entry<_> / [](Context& ctx) { ctx.a.DoStuff(); },
                                      on + event<DeactivationIntent> = off,
-                                     on + event<Active> / [] { std::cout << "ActiveAction" << std::endl; } = on,
-                                     on + sml::on_exit<_> / []() { std::cout << "On State exit" << std::endl; },
-                                     on + sml::on_entry<_> / []() { std::cout << "On State entry" << std::endl; });
+                                     on + sml::on_entry<_> / [](Context& ctx) { ctx.a.DoStuff(); });
     }
 };
 
+// GCC specfic method to get a rough representation of the absolute name of the type T
+// This is just a helper function for debugging.
 template <typename T>
-void GetName(const T& obj)
+void GetName(const T&)
 {
+#ifdef __GNUG__
     int status;
-    char* realname;
-    const auto& ti = typeid(obj);
-    realname = abi::__cxa_demangle(ti.name(), 0, 0, &status);
+    std::string realname = abi::__cxa_demangle(typeid(T).name(), 0, 0, &status);
     std::cout << realname << std::endl;
+#else
+#error "Function only implemented for GCC"
+#endif
 }
 
 class Visitor
 {
   public:
     template <typename TState>
-    // Cannot be specialized to the different types of on/off/init since TState has a different namespace:
-    // boost::sml::v1_1_0::aux <--> boost::sml::v1_1_0::front
     void operator()(const TState& state) const
     {
-        std::cout << "Type of state: ";
+        std::cout << "Visited unspecialized state with type: ";
         GetName(state);
-        std::cout << "Is in state: " << state.c_str() << std::endl;
     }
 };
 
 template <>
-void Visitor::operator()(const boost::sml::aux::string<class off>& state) const
+void Visitor::operator()(const boost::sml::aux::string<class init>&) const
 {
-    std::cout << "GOT IT" << std::endl;
+    std::cout << "Init action" << std::endl;
+}
+
+// Commented out to demonstrate that the original definition gets called and not a specialization
+// template <>
+// void Visitor::operator()(const boost::sml::aux::string<class on>&) const
+// {
+//     std::cout << "On action" << std::endl;
+// }
+
+template <>
+void Visitor::operator()(const boost::sml::aux::string<class off>&) const
+{
+    std::cout << "Off action" << std::endl;
 }
 
 int main()
 {
-    GetName(on);
     using namespace sml;
     Visitor visitor;
 
     ConcreteDependency foo;
-    Context ctx{foo, foo, foo, foo};
+    Context ctx{foo};
 
     sm<OnOffMachine> sm{ctx};
     assert(sm.is(off));
     sm.visit_current_states(visitor);
 
     sm.process_event(ActivationIntent{});
-    assert(sm.is(on));
-    sm.visit_current_states(visitor);
-
-    sm.process_event(Active{});
     assert(sm.is(on));
     sm.visit_current_states(visitor);
 
