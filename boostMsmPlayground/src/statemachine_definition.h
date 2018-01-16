@@ -73,11 +73,10 @@ struct Frontend : msmf::state_machine_def<Frontend, VisitableState>
     // Guards
     struct ActivationGuard
     {
-        template <class Event, class Fsm>
-        bool operator()(Event const&, Fsm&, Off&, On&) const
+        template <class Fsm>
+        bool operator()(const ActivationEvent& activation, Fsm&, Off&, On&) const
         {
-            std::cout << "Activation Guard checked" << std::endl;
-            return true;
+            return activation.IsAllowed();
         }
     };
 

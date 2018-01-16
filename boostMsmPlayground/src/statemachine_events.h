@@ -4,8 +4,20 @@
 namespace statemachine
 {
 
-struct ActivationEvent
+class ActivationEvent
 {
+  public:
+    ActivationEvent(bool is_allowed) : is_allowed_(is_allowed)
+    {
+    }
+
+    inline bool IsAllowed() const
+    {
+        return is_allowed_;
+    }
+
+  private:
+    bool is_allowed_{false};
 };
 
 struct DeactivationEvent

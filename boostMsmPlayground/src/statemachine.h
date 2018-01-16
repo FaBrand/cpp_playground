@@ -8,7 +8,7 @@ class Statemachine
   public:
     Statemachine();
 
-    void ActivationIntent();
+    void ActivationIntent(bool is_allowed);
 
     void DeactivationIntent();
 

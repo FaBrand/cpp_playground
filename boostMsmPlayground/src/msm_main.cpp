@@ -4,11 +4,13 @@
 
 void TestStatemachine()
 {
+    bool is_activation_allowed = true;
+
     StateVisitor vis;
     Statemachine sm;
 
     std::cout << "> Send ActivationIntent" << std::endl;
-    sm.ActivationIntent();
+    sm.ActivationIntent(is_activation_allowed);
     sm.VisitState(vis);
 
     std::cout << "> Send DeactivationIntent" << std::endl;
