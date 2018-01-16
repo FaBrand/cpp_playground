@@ -30,7 +30,7 @@ struct Frontend : msmf::state_machine_def<Frontend, VisitableState>
 
         void accept(StateVisitor& visitor) const
         {
-            visitor.visit_state(this, "Init");
+            visitor.visit_state(this);
         }
     };
 
@@ -45,7 +45,7 @@ struct Frontend : msmf::state_machine_def<Frontend, VisitableState>
 
         void accept(StateVisitor& visitor) const
         {
-            visitor.visit_state(this, "On");
+            visitor.visit_state(this);
         }
     };
 
@@ -59,7 +59,7 @@ struct Frontend : msmf::state_machine_def<Frontend, VisitableState>
         }
         void accept(StateVisitor& visitor) const
         {
-            visitor.visit_state(this, "Off");
+            visitor.visit_state(this);
         }
     };
 

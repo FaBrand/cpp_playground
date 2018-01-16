@@ -8,9 +8,9 @@
 struct StateVisitor
 {
     template <class T>
-    void visit_state(T* state, std::string who)
+    void visit_state(T* state)
     {
-        std::cout << "Visited " << std::quoted(who) << " State with type ";
+        std::cout << "Visited State with type ";
         GetName(*state);
     }
 };
