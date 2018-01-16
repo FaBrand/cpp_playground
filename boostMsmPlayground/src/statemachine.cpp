@@ -3,20 +3,20 @@
 
 Statemachine::Statemachine()
 {
-    on_off_statemachine.start();
+    on_off_statemachine_.start();
 }
 
 void Statemachine::ActivationIntent()
 {
-    on_off_statemachine.process_event(statemachine::ActivationEvent());
+    on_off_statemachine_.process_event(statemachine::ActivationEvent());
 }
 
 void Statemachine::DeactivationIntent()
 {
-    on_off_statemachine.process_event(statemachine::DeactivationEvent());
+    on_off_statemachine_.process_event(statemachine::DeactivationEvent());
 }
 
 void Statemachine::VisitState(StateVisitor& visitor)
 {
-    on_off_statemachine.visit_current_states(visitor);
+    on_off_statemachine_.visit_current_states(visitor);
 }

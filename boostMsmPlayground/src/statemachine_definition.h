@@ -16,7 +16,7 @@ namespace msmf = boost::msm::front;
 namespace mpl = boost::mpl;
 
 // ----- State machine
-struct OnOffStateMachineDefinition : msmf::state_machine_def<OnOffStateMachineDefinition, VisitableState>
+struct Frontend : msmf::state_machine_def<Frontend, VisitableState>
 {
     // States
     struct Init : msmf::state<VisitableState>
@@ -87,8 +87,8 @@ struct OnOffStateMachineDefinition : msmf::state_machine_def<OnOffStateMachineDe
     // Transition table
     struct transition_table : mpl::vector<
                                   // clang-format off
-                                  //      Start  , Event              , Next , Action     , Guard
-                                  msmf::Row<Init , msmf::none         , Off  , msmf::none , msmf::none>      ,
+                                  //      Start  , Event             , Next , Action     , Guard
+                                  msmf::Row<Init , msmf::none        , Off  , msmf::none , msmf::none>      ,
                                   msmf::Row<Off  , ActivationEvent   , On   , msmf::none , ActivationGuard> ,
                                   msmf::Row<On   , DeactivationEvent , Off  , msmf::none , msmf::none>
                                   // clang-format on
@@ -98,7 +98,7 @@ struct OnOffStateMachineDefinition : msmf::state_machine_def<OnOffStateMachineDe
 };
 
 // Pick a back-end
-typedef msm::back::state_machine<OnOffStateMachineDefinition> Sm;
+typedef msm::back::state_machine<Frontend> OnOffMachine;
 
 }  // namespace statemachine
 

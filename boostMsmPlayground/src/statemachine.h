@@ -1,7 +1,6 @@
 #ifndef STATEMACHINE_H
 #define STATEMACHINE_H
 
-#include "state_visitor.h"
 #include "statemachine_definition.h"
 
 class Statemachine
@@ -16,8 +15,7 @@ class Statemachine
     void VisitState(StateVisitor& visitor);
 
   private:
-    StateVisitor vis;
-    statemachine::Sm on_off_statemachine;
+    statemachine::OnOffMachine on_off_statemachine_;
 };
 
 #endif /* STATEMACHINE_H */
