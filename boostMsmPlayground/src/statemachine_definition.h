@@ -5,7 +5,7 @@
 #include <boost/msm/front/functor_row.hpp>
 #include <boost/msm/front/state_machine_def.hpp>
 #include "state_visitor.h"
-#include "statemachine_intents.h"
+#include "statemachine_events.h"
 #include "visitable_state.h"
 
 namespace statemachine
@@ -89,8 +89,8 @@ struct OnOffStateMachineDefinition : msmf::state_machine_def<OnOffStateMachineDe
                                   // clang-format off
                                   //      Start  , Event              , Next , Action     , Guard
                                   msmf::Row<Init , msmf::none         , Off  , msmf::none , msmf::none>      ,
-                                  msmf::Row<Off  , ActivationIntent   , On   , msmf::none , ActivationGuard> ,
-                                  msmf::Row<On   , DeactivationIntent , Off  , msmf::none , msmf::none>
+                                  msmf::Row<Off  , ActivationEvent   , On   , msmf::none , ActivationGuard> ,
+                                  msmf::Row<On   , DeactivationEvent , Off  , msmf::none , msmf::none>
                                   // clang-format on
                                   >
     {

@@ -1,5 +1,5 @@
 #include "statemachine.h"
-#include "statemachine_intents.h"
+#include "statemachine_events.h"
 
 Statemachine::Statemachine()
 {
@@ -8,12 +8,12 @@ Statemachine::Statemachine()
 
 void Statemachine::ActivationIntent()
 {
-    on_off_statemachine.process_event(statemachine::ActivationIntent());
+    on_off_statemachine.process_event(statemachine::ActivationEvent());
 }
 
 void Statemachine::DeactivationIntent()
 {
-    on_off_statemachine.process_event(statemachine::DeactivationIntent());
+    on_off_statemachine.process_event(statemachine::DeactivationEvent());
 }
 
 void Statemachine::VisitState(StateVisitor& visitor)
