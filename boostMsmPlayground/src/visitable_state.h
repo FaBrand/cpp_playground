@@ -4,11 +4,12 @@
 #include <boost/msm/back/state_machine.hpp>
 #include "state_visitor.h"
 
+template <class VisitorBase>
 struct VisitableState
 {
-    typedef boost::msm::back::args<void, StateVisitor&> accept_sig;
+    typedef boost::msm::back::args<void, VisitorBase&> accept_sig;
     virtual ~VisitableState() = default;
-    void accept(StateVisitor&) const
+    void accept(VisitorBase&) const
     {
         // Do nothing for the default case
     }

@@ -16,10 +16,13 @@ namespace msmf = boost::msm::front;
 namespace mpl = boost::mpl;
 
 // ----- State machine
-struct Frontend : msmf::state_machine_def<Frontend, VisitableState>
+template <class VisitorBase>
+struct Frontend : msmf::state_machine_def<Frontend<VisitorBase>, VisitableState<VisitorBase>>
 {
+    using VisitableStateType = VisitableState<VisitorBase>;
+
     // States
-    struct Init : msmf::state<VisitableState>
+    struct Init : msmf::state<VisitableStateType>
     {
         // Entry action
         template <class Event, class Fsm>
@@ -28,13 +31,13 @@ struct Frontend : msmf::state_machine_def<Frontend, VisitableState>
             std::cout << "Init::on_entry()" << std::endl;
         }
 
-        void accept(StateVisitor& visitor) const
+        void accept(VisitorBase& visitor) const
         {
             visitor.visit_state(this);
         }
     };
 
-    struct On : msmf::state<VisitableState>
+    struct On : msmf::state<VisitableStateType>
     {
         // Entry action
         template <class Event, class Fsm>
@@ -43,13 +46,13 @@ struct Frontend : msmf::state_machine_def<Frontend, VisitableState>
             std::cout << "On::on_entry()" << std::endl;
         }
 
-        void accept(StateVisitor& visitor) const
+        void accept(VisitorBase& visitor) const
         {
             visitor.visit_state(this);
         }
     };
 
-    struct Off : msmf::state<VisitableState>
+    struct Off : msmf::state<VisitableStateType>
     {
         // Entry action
         template <class Event, class Fsm>
@@ -57,7 +60,8 @@ struct Frontend : msmf::state_machine_def<Frontend, VisitableState>
         {
             std::cout << "Off::on_entry()" << std::endl;
         }
-        void accept(StateVisitor& visitor) const
+
+        void accept(VisitorBase& visitor) const
         {
             visitor.visit_state(this);
         }
@@ -97,7 +101,11 @@ struct Frontend : msmf::state_machine_def<Frontend, VisitableState>
 };
 
 // Pick a back-end
-typedef msm::back::state_machine<Frontend> OnOffMachine;
+template <class VisitorBase>
+struct OnOffMachine
+{
+    typedef msm::back::state_machine<Frontend<VisitorBase>> type;
+};
 
 }  // namespace statemachine
 

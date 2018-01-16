@@ -7,7 +7,6 @@ find_package(Boost 1.58 REQUIRED COMPONENTS system)
 
 add_executable(${PROJECT_NAME}
     ./src/msm_main.cpp
-    ./src/statemachine.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
