@@ -1,8 +1,7 @@
 #include <cassert>
 #include <iostream>
-#include <typeinfo>
 #include <boost/sml.hpp>
-#include <cxxabi.h>
+#include "utils/utils.h"
 
 class AbstractDependency
 {
@@ -56,20 +55,6 @@ struct OnOffMachine
                                      on + sml::on_entry<_> / [](Context& ctx) { ctx.a.DoStuff(); });
     }
 };
-
-// GCC specfic method to get a rough representation of the absolute name of the type T
-// This is just a helper function for debugging.
-template <typename T>
-void GetName(const T&)
-{
-#ifdef __GNUG__
-    int status;
-    std::string realname = abi::__cxa_demangle(typeid(T).name(), 0, 0, &status);
-    std::cout << realname << std::endl;
-#else
-#error "Function only implemented for GCC"
-#endif
-}
 
 class Visitor
 {

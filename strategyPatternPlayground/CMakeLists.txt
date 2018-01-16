@@ -3,7 +3,7 @@ project(strategy_pattern
   LANGUAGES CXX
 )
 
-add_library(utils
+add_library(strategy_utils
     ./src/util_types/concrete_strategy_a.cpp
     ./src/util_types/concrete_strategy_b.cpp
     ./src/util_types/reference_client.cpp
@@ -11,19 +11,19 @@ add_library(utils
     ./src/util_types/free_strategies.cpp
     ./src/util_types/free_context.cpp
 )
-target_include_directories(utils
+target_include_directories(strategy_utils
     PUBLIC
         ./include
 )
 
 add_executable(strategy_pattern ./src/unique_strategy.cpp)
-target_link_libraries(strategy_pattern utils)
+target_link_libraries(strategy_pattern strategy_utils)
 
 add_executable(strategy_pattern2 ./src/unique_strategy_v2.cpp)
-target_link_libraries(strategy_pattern2 utils)
+target_link_libraries(strategy_pattern2 strategy_utils)
 
 add_executable(reference_strategy_pattern ./src/reference_strategy.cpp)
-target_link_libraries(reference_strategy_pattern  utils)
+target_link_libraries(reference_strategy_pattern  strategy_utils)
 
 add_executable(free_strategy_pattern ./src/free_strategy.cpp)
-target_link_libraries(free_strategy_pattern  utils)
+target_link_libraries(free_strategy_pattern  strategy_utils)

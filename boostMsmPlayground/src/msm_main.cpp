@@ -4,21 +4,7 @@
 #include <boost/msm/back/state_machine.hpp>
 #include <boost/msm/front/functor_row.hpp>
 #include <boost/msm/front/state_machine_def.hpp>
-#include <cxxabi.h>
-
-// GCC specfic method to get a rough representation of the absolute name of the type T
-// This is just a helper function for debugging.
-template <typename T>
-void GetName(const T&)
-{
-#ifdef __GNUG__
-    int status;
-    std::string realname = abi::__cxa_demangle(typeid(T).name(), 0, 0, &status);
-    std::cout << realname << std::endl;
-#else
-#error "Function only implemented for GCC"
-#endif
-}
+#include "utils/utils.h"
 
 namespace simple_state_machine
 {
