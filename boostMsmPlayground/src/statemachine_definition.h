@@ -23,7 +23,7 @@ struct Frontend : msmf::state_machine_def<Frontend, VisitableState>
     {
         // Entry action
         template <class Event, class Fsm>
-        void on_entry(Event const&, Fsm&) const
+        void on_entry(const Event&, Fsm&) const
         {
             std::cout << "Init::on_entry()" << std::endl;
         }
@@ -38,7 +38,7 @@ struct Frontend : msmf::state_machine_def<Frontend, VisitableState>
     {
         // Entry action
         template <class Event, class Fsm>
-        void on_entry(Event const&, Fsm&) const
+        void on_entry(const Event&, Fsm&) const
         {
             std::cout << "On::on_entry()" << std::endl;
         }
@@ -53,7 +53,7 @@ struct Frontend : msmf::state_machine_def<Frontend, VisitableState>
     {
         // Entry action
         template <class Event, class Fsm>
-        void on_entry(Event const&, Fsm&) const
+        void on_entry(const Event&, Fsm&) const
         {
             std::cout << "Off::on_entry()" << std::endl;
         }
@@ -65,7 +65,7 @@ struct Frontend : msmf::state_machine_def<Frontend, VisitableState>
 
     // override no_transition to do nothing
     template <class Event, class Fsm>
-    void no_transition(Event const&, Fsm&, int /* state */)
+    void no_transition(const Event&, Fsm&, int /* state */)
     {
         // Do nothing if an event doesn't lead to a transition instead of assert(false)
     }
