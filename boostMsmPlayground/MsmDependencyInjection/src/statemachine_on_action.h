@@ -5,7 +5,10 @@ class StatemachineOnAction
 {
   public:
     virtual ~StatemachineOnAction() = default;
-    virtual void ExecuteAction() = 0;
+    virtual void operator()() = 0;
+    // {
+    //     std::cout << "Base" << std::endl;
+    // };
 };
 
 #endif /* STATEMACHINE_ON_ACTION_H */

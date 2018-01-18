@@ -6,6 +6,8 @@
 #include <boost/msm/front/functor_row.hpp>
 #include <boost/msm/front/state_machine_def.hpp>
 #include "statemachine_events.h"
+#include "statemachine_off_action.h"
+#include "statemachine_on_action.h"
 
 namespace statemachine
 {
@@ -17,6 +19,15 @@ namespace mpl = boost::mpl;
 // ----- State machine
 struct Frontend : msmf::state_machine_def<Frontend>
 {
+    using Callback = std::function<void()>;
+
+    // This is not safe against possible wrong order of arguments parsed
+    // The reason for this is that Boost MSM doesn't allow pure virtual interfaces so dependency injection via pure
+    // virtual interfaces doesn't work
+    Frontend(Callback on_action, Callback off_action) : on_action_(on_action), off_action_(off_action)
+    {
+    }
+
     // States
     struct Init : msmf::state<>
     {
@@ -48,13 +59,6 @@ struct Frontend : msmf::state_machine_def<Frontend>
         }
     };
 
-    // override no_transition to do nothing
-    template <class Event, class Fsm>
-    void no_transition(const Event&, Fsm&, int /* state */)
-    {
-        // Do nothing if an event doesn't lead to a transition instead of assert(false)
-    }
-
     // Guards
     struct ActivationGuard
     {
@@ -65,20 +69,52 @@ struct Frontend : msmf::state_machine_def<Frontend>
         }
     };
 
+    // Actions Executed in self transitions of the respective states
+    struct OffAction
+    {
+        void operator()(const StateAction&, Frontend& fsm, Off&, Off&) const
+        {
+            if (fsm.off_action_)
+                fsm.off_action_();
+        }
+    };
+
+    struct OnAction
+    {
+        void operator()(const StateAction&, Frontend& fsm, On&, On&) const
+        {
+            if (fsm.off_action_)
+                fsm.on_action_();
+        }
+    };
+
+    // This method is only defined that the internal definition doesn't call assert(false)
+    template <class Event, class Fsm>
+    void no_transition(const Event&, Fsm&, int /* state */)
+    {
+        // Do nothing if an event doesn't lead to a transition instead of assert(false)
+    }
+
     // Set initial state
     typedef Init initial_state;
 
     // Transition table
     struct transition_table : mpl::vector<
                                   // clang-format off
-                                  //      Start  , Event             , Next , Action     , Guard
-                                  msmf::Row<Init , msmf::none        , Off  , msmf::none , msmf::none>      ,
-                                  msmf::Row<Off  , ActivationEvent   , On   , msmf::none , ActivationGuard> ,
-                                  msmf::Row<On   , DeactivationEvent , Off  , msmf::none , msmf::none>
+                                  //      Start  , Event             , Next       , Action     , Guard
+                                  msmf::Row<Init , msmf::none        , Off        , msmf::none , msmf::none>      ,
+                                  msmf::Row<Off  , ActivationEvent   , On         , msmf::none , ActivationGuard> ,
+                                  msmf::Row<Off  , StateAction       , msmf::none , OffAction  , msmf::none>      ,
+                                  msmf::Row<On   , DeactivationEvent , Off        , msmf::none , msmf::none>      ,
+                                  msmf::Row<On   , StateAction       , msmf::none , OnAction   , msmf::none>
                                   // clang-format on
                                   >
     {
     };
+
+  private:
+    Callback on_action_{nullptr};
+    Callback off_action_{nullptr};
 };
 
 // Pick a back-end

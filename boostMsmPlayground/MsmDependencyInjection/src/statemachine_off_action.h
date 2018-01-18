@@ -4,8 +4,8 @@
 class StatemachineOffAction
 {
   public:
-    virtual ~StatemachineOffAction();
-    virtual void ExecuteAction() = 0;
+    virtual ~StatemachineOffAction() = default;
+    virtual void operator()(){};
 };
 
 #endif /* STATEMACHINE_OFF_ACTION_H */

@@ -24,6 +24,10 @@ struct DeactivationEvent
 {
 };
 
+struct StateAction
+{
+};
+
 }  // namespace statemachine
 
 #endif /* STATEMACHINE_EVENTS_H */
