@@ -32,8 +32,8 @@ struct Frontend : msmf::state_machine_def<Frontend>
     struct Init : msmf::state<>
     {
         // Entry action
-        template <class Event, class Fsm>
-        void on_entry(const Event&, Fsm&) const
+        template <class Event>
+        void on_entry(const Event&, Frontend&) const
         {
             std::cout << "Init::on_entry()" << std::endl;
         }
@@ -42,8 +42,8 @@ struct Frontend : msmf::state_machine_def<Frontend>
     struct On : msmf::state<>
     {
         // Entry action
-        template <class Event, class Fsm>
-        void on_entry(const Event&, Fsm&) const
+        template <class Event>
+        void on_entry(const Event&, Frontend&) const
         {
             std::cout << "On::on_entry()" << std::endl;
         }
@@ -52,8 +52,8 @@ struct Frontend : msmf::state_machine_def<Frontend>
     struct Off : msmf::state<>
     {
         // Entry action
-        template <class Event, class Fsm>
-        void on_entry(const Event&, Fsm&) const
+        template <class Event>
+        void on_entry(const Event&, Frontend&) const
         {
             std::cout << "Off::on_entry()" << std::endl;
         }
@@ -62,8 +62,7 @@ struct Frontend : msmf::state_machine_def<Frontend>
     // Guards
     struct ActivationGuard
     {
-        template <class Fsm>
-        bool operator()(const ActivationEvent& activation, Fsm&, Off&, On&) const
+        bool operator()(const ActivationEvent& activation, Frontend&, Off&, On&) const
         {
             return activation.IsAllowed();
         }
@@ -113,8 +112,8 @@ struct Frontend : msmf::state_machine_def<Frontend>
     };
 
   private:
-    Callback on_action_{nullptr};
-    Callback off_action_{nullptr};
+    const Callback on_action_{nullptr};
+    const Callback off_action_{nullptr};
 };
 
 // Pick a back-end
