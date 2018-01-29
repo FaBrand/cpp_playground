@@ -17,4 +17,5 @@ add_subdirectory(strategyPatternPlayground)
 add_subdirectory(boostAsioUdpPlayground)
 add_subdirectory(boostSmlPlayground)
 add_subdirectory(boostMsmPlayground)
+add_subdirectory(misc)
 
