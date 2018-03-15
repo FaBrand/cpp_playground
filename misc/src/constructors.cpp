@@ -10,6 +10,8 @@ class Member
     Member(Member&&) = default;
     Member& operator=(const Member&) = default;
     Member& operator=(Member&&) = default;
+
+  private:
     int val_;
 };
 
@@ -21,7 +23,7 @@ class AClass
         std::cout << "  Default ctor" << std::endl;
     }
 
-    AClass(const int val) : member(val)
+    explicit AClass(int val) : member(val)
     {
         std::cout << "  Regular ctor" << std::endl;
     }
@@ -46,14 +48,8 @@ class AClass
     AClass& operator=(AClass&& other)
     {
         std::cout << "  Move Assignment op" << std::endl;
-
         member = std::move(other.member);
         return *this;
-    }
-
-    int Get() const
-    {
-        return member.val_;
     }
 
   private:
@@ -62,83 +58,68 @@ class AClass
 
 AClass CreateAClass()
 {
-    return AClass{42};
+    AClass a{42};
+    return a;
 }
+
+#define RUN_EXAMPLE(description, command) \
+    {                                     \
+        std::cout << description << '\n'; \
+        command;                          \
+        std::cout << '\n';                \
+    }
+
+using AVec = std::vector<AClass>;
 
 int main()
 {
-    std::cout << "Regular ctor" << std::endl;
-    AClass foo{42};  // Default constructor
-    std::cout << '\n';
 
-    std::cout << "Copying" << std::endl;
-    AClass copy_ctor{foo};  // Copy constructor
-    std::cout << '\n';
+    RUN_EXAMPLE("Regular ctor", AClass foo{42});
 
-    std::cout << "Copying" << std::endl;
-    AClass also_copy_ctor = foo;  // Also Copy constructor
-    std::cout << '\n';
+    RUN_EXAMPLE("Copying", AClass foo{}; AClass bar{foo});
 
-    std::cout << "Copy elision" << std::endl;
-    AClass move_ctor{AClass(42 * 2)};  // Copy elision
-    std::cout << '\n';
+    RUN_EXAMPLE("Copying", AClass foo{}; AClass bar = foo;);
 
-    std::cout << "Copy elision" << std::endl;
-    AClass move_ctor2 = AClass(42 * 2);  // Copy elision
-    (void)move_ctor2;
-    std::cout << '\n';
+    RUN_EXAMPLE("Copy elision", AClass foo{AClass{42}});
 
-    std::cout << "Create function: Assignment" << std::endl;
-    AClass a = CreateAClass();
-    (void)a;
-    std::cout << '\n';
+    RUN_EXAMPLE("Copy elision", AClass foo = AClass{42});
 
-    std::cout << "Create function: Direct init" << std::endl;
-    AClass b{CreateAClass()};
-    std::cout << '\n';
+    RUN_EXAMPLE("Create function: Assignment", AClass foo = CreateAClass(););
 
-    std::cout << "Moving" << std::endl;
-    AClass anothother_move_ctor{std::move(AClass(42 * 2))};  // Move constructor
-    std::cout << '\n';
+    RUN_EXAMPLE("Create function: Direct init", AClass foo{CreateAClass()};);
 
-    std::cout << "Assignment" << std::endl;
-    foo = also_copy_ctor;
-    std::cout << '\n';
+    RUN_EXAMPLE("Move Construction", AClass foo{std::move(AClass{})};);
 
-    std::cout << "Move Assignment" << std::endl;
-    foo = AClass(42 * 3);
-    std::cout << '\n';
+    RUN_EXAMPLE("Assignment operation", AClass foo{}; AClass bar{}; foo = bar;);
 
-    std::vector<AClass> x;
-    std::cout << "Emplace back" << std::endl;
-    x.emplace_back(AClass(15));
-    std::cout << '\n';
+    RUN_EXAMPLE("Move assignment", AClass foo{}; foo = AClass{};);
 
-    std::cout << "Push back" << std::endl;
-    std::vector<AClass> y;
-    y.push_back(AClass(15));
-    std::cout << '\n';
+    RUN_EXAMPLE("Emplace back", AVec x; x.emplace_back(15););
 
-    std::cout << "Dynamically resizing a vector" << std::endl;
-    std::vector<AClass> z;
-    for (int i = 0; i < 10; ++i)
-    {
-        std::cout << "  Push back #" << i << '\n';
-        std::cout << "    Size/Capacity " << z.size() << '/' << z.capacity() << '\n';
-        z.push_back(AClass(16));
-    }
-    std::cout << '\n';
+    RUN_EXAMPLE("Emplace back", AVec x; x.emplace_back(AClass{}););
 
-    std::cout << "Dynamically resizing a vector with reserved elements" << std::endl;
-    std::vector<AClass> xy;
-    xy.reserve(9);
-    for (int i = 0; i < 10; ++i)
-    {
-        std::cout << "  Push back #" << i << '\n';
-        std::cout << "    Size/Capacity " << xy.size() << '/' << xy.capacity() << '\n';
-        xy.push_back(AClass(16));
-    }
-    std::cout << '\n';
+    RUN_EXAMPLE("Push back", AVec x; x.push_back(AClass{}););
+
+    RUN_EXAMPLE("Dynamically resizing a vector", {
+        AVec x;
+        for (int i = 0; i < 3; ++i)
+        {
+            std::cout << "  Push back #" << i << '\n';
+            std::cout << "    Size/Capacity " << x.size() << '/' << x.capacity() << '\n';
+            x.push_back(AClass(16));
+        }
+    });
+
+    RUN_EXAMPLE("Dynamically resizing a vector with reserved elements", {
+        AVec x;
+        x.reserve(3);
+        for (int i = 0; i < 5; ++i)
+        {
+            std::cout << "  Push back #" << i << '\n';
+            std::cout << "    Size/Capacity " << x.size() << '/' << x.capacity() << '\n';
+            x.push_back(AClass(16));
+        }
+    });
 
     return 0;
 }

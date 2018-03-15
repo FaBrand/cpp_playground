@@ -4,3 +4,7 @@ project(miscellanious
 )
 
 add_executable(constructors ./src/constructors.cpp)
+
+target_compile_options(constructors PRIVATE
+    -Wno-unused-but-set-variable
+    )
