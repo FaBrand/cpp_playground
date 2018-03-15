@@ -4,29 +4,31 @@
 class Member
 {
   public:
-    Member(int val) : val_(val)
-    {
-    }
-
-    // Member(const Member&) = delete;
-    // Member(Member&&) = delete;
-    // Member& operator=(const Member&) = delete;
-    // Member& operator=(Member&&) = delete;
-
+    Member(int val) : val_(val) {}
+    Member() = default;
+    Member(const Member&) = default;
+    Member(Member&&) = default;
+    Member& operator=(const Member&) = default;
+    Member& operator=(Member&&) = default;
     int val_;
 };
 
 class AClass
 {
   public:
+    AClass()
+    {
+        std::cout << "  Default ctor" << std::endl;
+    }
+
     AClass(const int val) : member(val)
     {
-        std::cout << "  Regular constructor" << std::endl;
+        std::cout << "  Regular ctor" << std::endl;
     }
 
     AClass(const AClass& val) : member(val.member)
     {
-        std::cout << "  Copy constructor" << std::endl;
+        std::cout << "  Copy ctor" << std::endl;
     }
 
     AClass(AClass&& val) : member(std::move(val.member))
@@ -36,14 +38,14 @@ class AClass
 
     AClass& operator=(const AClass& other)
     {
-        std::cout << "  Assignment" << std::endl;
+        std::cout << "  Assignment op" << std::endl;
         member = other.member;
         return *this;
     }
 
     AClass& operator=(AClass&& other)
     {
-        std::cout << "  Move Assignment" << std::endl;
+        std::cout << "  Move Assignment op" << std::endl;
 
         member = std::move(other.member);
         return *this;
@@ -58,6 +60,11 @@ class AClass
     Member member;
 };
 
+AClass CreateAClass()
+{
+    return AClass{42};
+}
+
 int main()
 {
     std::cout << "Regular ctor" << std::endl;
@@ -70,7 +77,8 @@ int main()
     AClass also_copy_ctor = foo;  // Also Copy constructor
 
     std::cout << "Copy elision" << std::endl;
-    AClass move_ctor{AClass(42 * 2)};  // Copy elision
+    AClass move_ctor{AClass(42 * 2)};    // Copy elision
+    AClass move_ctor2 = AClass(42 * 2);  // Copy elision
 
     std::cout << "Moving" << std::endl;
     AClass anothother_move_ctor{std::move(AClass(42 * 2))};  // Move constructor
@@ -107,5 +115,12 @@ int main()
         std::cout << "Size/Capacity " << xy.size() << '/' << xy.capacity() << '\n';
         xy.push_back(AClass(16));
     }
+
+    std::cout << "Create function: Assignment" << std::endl;
+    AClass a = CreateAClass();
+
+    std::cout << "Create function: Direct init" << std::endl;
+    AClass b{CreateAClass()};
+
     return 0;
 }
