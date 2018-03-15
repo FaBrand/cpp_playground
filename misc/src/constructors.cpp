@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <iostream>
 #include <vector>
 
@@ -11,7 +12,6 @@ class Member
     Member& operator=(const Member&) = default;
     Member& operator=(Member&&) = default;
 
-  private:
     int val_;
 };
 
@@ -52,14 +52,36 @@ class AClass
         return *this;
     }
 
+    int Get() const
+    {
+        return member.val_;
+    }
+
   private:
     Member member;
 };
 
 AClass CreateAClass()
 {
+    std::cout << "  CreateFunction Called\n";
     AClass a{42};
     return a;
+}
+
+template <typename T>
+void PrintVectorInformation(const std::vector<T>& vec)
+{
+    std::cout << "   Size/Capacity " << vec.size() << '/' << vec.capacity() << '\n';
+}
+
+template <typename T>
+void PrintVector(const std::vector<T>& vec)
+{
+    int counter{};
+    for (auto& i : vec)
+    {
+        std::cout << "   vec[" << counter++ << "]: " << std::to_string(i.Get()) << "\n";
+    }
 }
 
 #define RUN_EXAMPLE(description, command) \
@@ -94,7 +116,7 @@ int main()
 
     RUN_EXAMPLE("Move assignment", AClass foo{}; foo = AClass{};);
 
-    RUN_EXAMPLE("Emplace back", AVec x; x.emplace_back(15););
+    RUN_EXAMPLE("Emplace back", AVec x; x.emplace_back(42););
 
     RUN_EXAMPLE("Emplace back", AVec x; x.emplace_back(AClass{}););
 
@@ -105,8 +127,8 @@ int main()
         for (int i = 0; i < 3; ++i)
         {
             std::cout << "  Push back #" << i << '\n';
-            std::cout << "    Size/Capacity " << x.size() << '/' << x.capacity() << '\n';
-            x.push_back(AClass(16));
+            PrintVectorInformation(x);
+            x.push_back(AClass(42));
         }
     });
 
@@ -116,9 +138,31 @@ int main()
         for (int i = 0; i < 5; ++i)
         {
             std::cout << "  Push back #" << i << '\n';
-            std::cout << "    Size/Capacity " << x.size() << '/' << x.capacity() << '\n';
+            PrintVectorInformation(x);
             x.push_back(AClass(16));
         }
+    });
+
+    std::cout << "Setting up example Data\n";
+    AVec example_vector{AClass{0}, AClass{1}, AClass{2}, AClass{3}};
+    std::cout << '\n';
+
+    RUN_EXAMPLE("Assigning a vector", {
+        AVec y;
+        y = example_vector;
+    });
+
+    RUN_EXAMPLE("Copying to a empty vector", {
+        AVec y;
+        std::copy(example_vector.begin(), example_vector.end(), std::back_inserter(y));
+    });
+
+    RUN_EXAMPLE("Moving a vector", {
+        std::cout << " Construction step\n";
+        AVec x(example_vector);
+        AVec y;
+        std::cout << " Move step\n";
+        y = std::move(x);
     });
 
     return 0;
