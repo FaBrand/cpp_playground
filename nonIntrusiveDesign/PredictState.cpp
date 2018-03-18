@@ -7,7 +7,7 @@ struct LongitudinalState
     double dotx;
 };
 
-struct GlobalState:
+struct GlobalState
 {
     double x;
     double y;
@@ -17,7 +17,7 @@ struct GlobalState:
 
 using LongitudinalTrajectory = std::vector<LongitudinalState>;
 
-LongitudinalState Predict(LongitudinalState const& state)
+LongitudinalState Integrate(LongitudinalState const& state)
 {
     LongitudinalState new_state{};
     new_state.x += state.x + state.dotx;
@@ -25,7 +25,7 @@ LongitudinalState Predict(LongitudinalState const& state)
     return new_state;
 };
 
-GlobalState Predict(GlobalState const& state)
+GlobalState Integrate(GlobalState const& state)
 {
     GlobalState new_state{};
     new_state.x += state.x + state.dotx;
@@ -35,22 +35,45 @@ GlobalState Predict(GlobalState const& state)
     return new_state;
 };
 
-std::ostream& operator<<(std::ostream& os, State const& state)
+void Integrate(LongitudinalTrajectory& trajectory, const LongitudinalState& current_state)
 {
-    return os << state.x << " " << state.y;
+    double dt = 0.;
+    for (auto& state : trajectory)
+    {
+        dt++;
+        state.x = current_state.x + dt * current_state.dotx;
+        state.dotx = current_state.dotx;
+    };
+};
+
+std::ostream& operator<<(std::ostream& os, LongitudinalState const& state)
+{
+    return os << state.x << " " << state.dotx;
+};
+
+std::ostream& operator<<(std::ostream& os, LongitudinalTrajectory const& trajectory)
+{
+    for (auto const& state : trajectory)
+    {
+        os << state << "\n";
+    }
+    return os;
 };
 
 int main()
 {
-    LongitudinalState long_state{};
+    LongitudinalState long_state{0., 1.};
     GlobalState global_state{};
 
-    new_long_state = Predict(long_state);
-    new_global_state = Predict(global_state);
+    auto new_long_state = Integrate(long_state);
+    auto new_global_state = Integrate(global_state);
+
+    LongitudinalTrajectory trajectory(10, LongitudinalState{});
+    Integrate(trajectory, long_state);
+    std::cout << trajectory << "\n";
 
     // LongitudinalTrajectory trajectory;
     // trajectory.push_back(state);
 
-    // Predict(trajectory);
     // Print(trajectory);
 }
