@@ -7,5 +7,18 @@ Client::Client(std::unique_ptr<IWork>&& slave) : slave_(std::move(slave))
 
 void Client::DoSomething()
 {
-    std::cout << "Did something" << '\n';
+    DelegateToWorker();
+}
+
+void Client::DelegateToWorker()
+{
+    if (WorkerIsPresent())
+    {
+        slave_->DoSomeWork();
+    }
+}
+
+bool Client::WorkerIsPresent() const
+{
+    return slave_ != nullptr;
 }

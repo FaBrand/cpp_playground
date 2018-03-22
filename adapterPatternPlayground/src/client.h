@@ -11,6 +11,9 @@ class Client
     void DoSomething();
 
   private:
+    void DelegateToWorker();
+    bool WorkerIsPresent() const;
+
     std::unique_ptr<IWork> slave_{nullptr};
 };
 
