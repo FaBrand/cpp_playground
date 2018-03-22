@@ -3,7 +3,7 @@
 
 void Client::HireWorker(std::unique_ptr<IWork>&& slave)
 {
-    slave_.swap(slave);
+    slaves_.push_back(std::move(slave));
 }
 
 void Client::DoSomething()
@@ -15,7 +15,10 @@ void Client::DelegateToWorker()
 {
     if (WorkerIsPresent())
     {
-        slave_->DoSomeWork();
+        for (auto& slave : slaves_)
+        {
+            slave->DoSomeWork();
+        }
     }
     else
     {
@@ -25,5 +28,5 @@ void Client::DelegateToWorker()
 
 bool Client::WorkerIsPresent() const
 {
-    return slave_ != nullptr;
+    return !slaves_.empty();
 }

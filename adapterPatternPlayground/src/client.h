@@ -2,6 +2,7 @@
 #define CLIENT_H
 
 #include <memory>
+#include <vector>
 #include "IWork.h"
 
 class Client
@@ -14,7 +15,7 @@ class Client
     void DelegateToWorker();
     bool WorkerIsPresent() const;
 
-    std::unique_ptr<IWork> slave_{nullptr};
+    std::vector<std::unique_ptr<IWork>> slaves_;
 };
 
 #endif  // CLIENT_H
