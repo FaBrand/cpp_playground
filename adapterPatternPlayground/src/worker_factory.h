@@ -2,11 +2,15 @@
 #define WORKER_FACTORY_H
 
 #include <memory>
+#include "IWorker.h"
 
 template <typename T>
-std::unique_ptr<T> MakeWorker()
+auto MakeWorker() -> decltype(auto)
 {
-    return std::make_unique<T>();
+    using U = std::decay_t<T>;
+    static_assert(std::is_base_of<IWorker, U>::value, "The instance you want to create is no worker");
+
+    return std::make_unique<U>();
 }
 
 #endif  // WORKER_FACTORY_H
