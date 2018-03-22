@@ -1,7 +1,7 @@
 #include "client.h"
 #include <iostream>
 
-void Client::HireWorker(std::unique_ptr<IWork>&& slave)
+void Client::HireWorker(std::unique_ptr<IWorker>&& slave)
 {
     slaves_.push_back(std::move(slave));
 }

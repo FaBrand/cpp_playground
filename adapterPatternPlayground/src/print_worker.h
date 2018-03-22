@@ -2,11 +2,11 @@
 #define PRINT_WORKER_H
 
 #include <memory>
-#include "IWork.h"
+#include "IWorker.h"
 
-std::unique_ptr<IWork> MakePrintWorker();
+std::unique_ptr<IWorker> MakePrintWorker();
 
-class PrintWorker : public IWork
+class PrintWorker : public IWorker
 {
   public:
     void DoSomeWork() override;
