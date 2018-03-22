@@ -4,8 +4,6 @@
 #include <memory>
 #include "IWorker.h"
 
-std::unique_ptr<IWorker> MakePrintWorker();
-
 class PrintWorker : public IWorker
 {
   public:
