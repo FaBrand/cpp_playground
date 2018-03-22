@@ -7,7 +7,7 @@
 class Client
 {
   public:
-    explicit Client(std::unique_ptr<IWork>&& slave);
+    void HireWorker(std::unique_ptr<IWork>&& slave);
     void DoSomething();
 
   private:

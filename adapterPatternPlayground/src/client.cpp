@@ -1,8 +1,9 @@
 #include "client.h"
 #include <iostream>
 
-Client::Client(std::unique_ptr<IWork>&& slave) : slave_(std::move(slave))
+void Client::HireWorker(std::unique_ptr<IWork>&& slave)
 {
+    slave_.swap(slave);
 }
 
 void Client::DoSomething()
@@ -15,6 +16,10 @@ void Client::DelegateToWorker()
     if (WorkerIsPresent())
     {
         slave_->DoSomeWork();
+    }
+    else
+    {
+        std::cout << "I must hire a worker first." << '\n';
     }
 }
 

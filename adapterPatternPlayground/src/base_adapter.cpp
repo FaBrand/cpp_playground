@@ -4,7 +4,11 @@
 int main()
 {
 
-    Client some_client{MakePrintWorker()};
+    Client some_client;
+
+    some_client.DoSomething();
+
+    some_client.HireWorker(MakePrintWorker());
 
     some_client.DoSomething();
 
