@@ -1,5 +1,6 @@
 #include "client.h"
 #include "print_worker.h"
+#include "translator.h"
 
 int main()
 {
@@ -9,6 +10,10 @@ int main()
     some_client.DoSomething();
 
     some_client.HireWorker(MakePrintWorker());
+
+    some_client.DoSomething();
+
+    some_client.HireWorker(std::make_unique<Translator>());
 
     some_client.DoSomething();
 

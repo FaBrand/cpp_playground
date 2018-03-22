@@ -8,6 +8,7 @@ add_library(adapter_pattern_utils
     ./src/client.cpp
     ./src/print_worker.cpp
     ./src/foreign_print_worker.cpp
+    ./src/translator.cpp
 )
 
 
