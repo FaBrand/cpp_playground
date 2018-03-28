@@ -1,6 +1,6 @@
 add_library(observer_pattern_utils_raw_pointer
     subject.cpp
-    client.cpp
+    concrete_observer.cpp
 )
 
 

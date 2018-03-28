@@ -1,4 +1,4 @@
-#include "client.h"
+#include "concrete_observer.h"
 #include "subject.h"
 
 int main()
@@ -7,7 +7,7 @@ int main()
     data_provider->UpdateSubjectWith(LowLevelInput{1, 2.5f});
 
     {
-        auto subject_user{std::make_shared<Client>()};
+        auto subject_user{std::make_shared<ConcreteObserver>()};
 
         subject_user->Subscribe(data_provider);
 

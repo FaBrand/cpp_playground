@@ -1,13 +1,13 @@
-#include "client.h"
+#include "concrete_observer.h"
 #include <iostream>
 
-Client::~Client()
+ConcreteObserver::~ConcreteObserver()
 {
-    std::cout << "Client destroyed" << '\n';
+    std::cout << "ConcreteObserver destroyed" << '\n';
     CancelSubscription();
 }
 
-void Client::Subscribe(std::shared_ptr<Subject> sub)
+void ConcreteObserver::Subscribe(std::shared_ptr<Subject> sub)
 {
     // Using this there is a circular dependency from the subject to the observer
     // Therefore neither of them would get destroyed --> leak
@@ -16,7 +16,7 @@ void Client::Subscribe(std::shared_ptr<Subject> sub)
     sub->attach(shared_from_this());
 }
 
-void Client::CancelSubscription()
+void ConcreteObserver::CancelSubscription()
 {
     if (subject_)
     {
@@ -27,7 +27,7 @@ void Client::CancelSubscription()
     subject_ = nullptr;
 }
 
-void Client::update(const LowLevelInput& data)
+void ConcreteObserver::update(const LowLevelInput& data)
 {
-    std::cout << "Client: Got new data >> " << data.value_a_ << " - " << data.value_b_ << '\n';
+    std::cout << "ConcreteObserver: Got new data >> " << data.value_a_ << " - " << data.value_b_ << '\n';
 }
