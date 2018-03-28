@@ -21,7 +21,7 @@ class Client : public Observer
     void update(LowLevelInput const& data) override;
 
   private:
-    std::weak_ptr<Subject> subject_{nullptr};
+    std::shared_ptr<Subject> subject_{nullptr};
 };
 
 #endif /* CLIENT_H */
