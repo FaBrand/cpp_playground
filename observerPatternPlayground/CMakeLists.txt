@@ -3,5 +3,5 @@ project(observer_pattern
   LANGUAGES CXX
 )
 
-add_subdirectory(./src/variant_1)
-add_subdirectory(./src/variant_2)
+add_subdirectory(./variant_raw_pointer)
+add_subdirectory(./variant_shared_pointer)
