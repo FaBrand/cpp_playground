@@ -1,6 +1,7 @@
 add_library(observer_pattern_utils_shared_pointer
     subject.cpp
     concrete_observer.cpp
+    notification_helper.cpp
 )
 
 

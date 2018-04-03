@@ -1,6 +1,7 @@
 #include "subject.h"
 #include <algorithm>
 #include <iostream>
+#include "notification_helper.h"
 
 void Subject::attach(std::shared_ptr<Observer> observer)
 {
@@ -22,11 +23,5 @@ void Subject::operator()(LowLevelInput const& new_data)
     // This can be done either before or after the Subscribers have been notified
     CleanUpSubscribers();
 
-    for (auto& subscriber : subscriber_)
-    {
-        if (auto sh_ptr = subscriber.lock())
-        {
-            sh_ptr->update(new_data);
-        }
-    }
+    detail::Notify(subscriber_, new_data);
 }
