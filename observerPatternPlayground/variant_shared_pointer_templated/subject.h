@@ -6,16 +6,17 @@
 #include <memory>
 
 struct LowLevelInput;
-class Observer;
+#include "observer.h"
 
 class Subject
 {
   public:
-    void attach(std::shared_ptr<Observer> observer);
-    void operator()(LowLevelInput const& new_data);
+    using data_type = LowLevelInput;
+    void attach(std::shared_ptr<Observer<Subject>> observer);
+    void operator()(data_type const& new_data);
 
   private:
-    std::list<std::weak_ptr<Observer>> subscribers_{};
+    std::list<std::weak_ptr<Observer<Subject>>> subscribers_{};
 
     void RemoveDeadSubscibers();
 };

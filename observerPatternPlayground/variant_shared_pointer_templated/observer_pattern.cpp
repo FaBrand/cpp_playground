@@ -4,7 +4,7 @@
 
 int main()
 {
-    auto outer_user{std::make_shared<ConcreteObserver>()};
+    auto outer_user{std::make_shared<ConcreteObserver<Subject>>()};
 
     {
         Subject data_provider{};
@@ -12,11 +12,11 @@ int main()
 
         outer_user->Subscribe(data_provider);
 
-        auto parallel_user{std::make_shared<ConcreteObserver>()};
+        auto parallel_user{std::make_shared<ConcreteObserver<Subject>>()};
         parallel_user->Subscribe(data_provider);
 
         {
-            auto inner_user{std::make_shared<ConcreteObserver>()};
+            auto inner_user{std::make_shared<ConcreteObserver<Subject>>()};
 
             inner_user->Subscribe(data_provider);
 

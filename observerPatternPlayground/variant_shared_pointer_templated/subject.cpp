@@ -3,7 +3,7 @@
 #include <iostream>
 #include "notification_helper.h"
 
-void Subject::attach(std::shared_ptr<Observer> observer)
+void Subject::attach(std::shared_ptr<Observer<Subject>> observer)
 {
     std::cout << "Subject: Subscribed a observer" << '\n';
     subscribers_.push_back(observer);

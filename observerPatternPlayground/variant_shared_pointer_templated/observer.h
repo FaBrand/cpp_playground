@@ -2,18 +2,22 @@
 #define OBSERVER_H
 
 #include <memory>
-#include "low_level_input.h"
 
-class Observer : public std::enable_shared_from_this<Observer>
+struct LowLevelInput;
+
+template <typename Subject>
+class Observer : public std::enable_shared_from_this<Observer<Subject>>
 {
   public:
     virtual ~Observer() = default;
-    virtual void update(LowLevelInput const& data) = 0;
 
-    template <typename Subject>
+    using data_type = typename Subject::data_type;
+
+    virtual void update(data_type const& data) = 0;
+
     void Subscribe(Subject& subject)
     {
-        subject.attach(shared_from_this());
+        subject.attach(Observer<Subject>::shared_from_this());
     }
 };
 

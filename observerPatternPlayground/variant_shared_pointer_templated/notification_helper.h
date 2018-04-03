@@ -9,7 +9,11 @@ struct LowLevelInput;
 namespace detail
 {
 
-void Notify(Observer& observer, LowLevelInput const& new_data);
+template <typename Subject>
+void Notify(Observer<Subject>& observer, LowLevelInput const& new_data)
+{
+    observer.update(new_data);
+}
 
 template <typename pointee>
 void Notify(std::weak_ptr<pointee> const& observer, LowLevelInput const& new_data);
