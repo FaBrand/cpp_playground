@@ -9,11 +9,11 @@
 #include "notification_helper.h"
 #include "observer.h"
 
-template <typename concrete_observer>
 class Subject
 {
   public:
-    void attach(std::shared_ptr<Observer<concrete_observer>> observer)
+    using Watcher = std::weak_ptr<Observer>;
+    void attach(Watcher observer)
     {
         std::cout << "Subject: Subscribed a observer" << '\n';
         subscribers_.push_back(observer);
@@ -31,7 +31,7 @@ class Subject
     }
 
   private:
-    std::list<std::weak_ptr<Observer<concrete_observer>>> subscribers_{};
+    std::list<Watcher> subscribers_{};
 
     void RemoveDeadSubscibers()
     {

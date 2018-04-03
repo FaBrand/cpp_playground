@@ -7,8 +7,8 @@
 namespace detail
 {
 
-template <typename T, typename U>
-void Notify(Observer<T>& observer, U const& new_data)
+template <typename U>
+void Notify(Observer& observer, U const& new_data)
 {
     observer.update(new_data);
 }

@@ -7,10 +7,10 @@
 
 struct LowLevelInput;
 
-class ConcreteObserver : public Observer<ConcreteObserver>
+class ConcreteObserver : public Observer
 {
   public:
-    void update_impl(LowLevelInput const& data);
+    void update(LowLevelInput const& data) override;
 };
 
 #endif /* CLIENT_H */

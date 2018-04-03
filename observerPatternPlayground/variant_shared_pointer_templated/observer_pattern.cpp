@@ -7,7 +7,7 @@ int main()
     auto outer_user{std::make_shared<ConcreteObserver>()};
 
     {
-        Subject<ConcreteObserver> data_provider{};
+        Subject data_provider{};
         data_provider(LowLevelInput{1, 2.5f});
 
         outer_user->Subscribe(data_provider);
