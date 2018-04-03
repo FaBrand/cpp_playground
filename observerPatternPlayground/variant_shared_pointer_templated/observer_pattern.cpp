@@ -4,19 +4,19 @@
 
 int main()
 {
-    auto outer_user{std::make_shared<ConcreteObserver<Subject>>()};
+    auto outer_user{std::make_shared<ConcreteObserver>()};
 
     {
-        Subject data_provider{};
+        Subject<ConcreteObserver> data_provider{};
         data_provider(LowLevelInput{1, 2.5f});
 
         outer_user->Subscribe(data_provider);
 
-        auto parallel_user{std::make_shared<ConcreteObserver<Subject>>()};
+        auto parallel_user{std::make_shared<ConcreteObserver>()};
         parallel_user->Subscribe(data_provider);
 
         {
-            auto inner_user{std::make_shared<ConcreteObserver<Subject>>()};
+            auto inner_user{std::make_shared<ConcreteObserver>()};
 
             inner_user->Subscribe(data_provider);
 

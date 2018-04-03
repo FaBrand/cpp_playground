@@ -5,19 +5,28 @@
 
 struct LowLevelInput;
 
-template <typename Subject>
-class Observer : public std::enable_shared_from_this<Observer<Subject>>
+template <typename ObserverImpl>
+class Observer : public std::enable_shared_from_this<Observer<ObserverImpl>>
 {
   public:
     virtual ~Observer() = default;
 
-    using data_type = typename Subject::data_type;
-
-    virtual void update(data_type const& data) = 0;
-
-    void Subscribe(Subject& subject)
+    template <typename T>
+    void update(T const& data)
     {
-        subject.attach(Observer<Subject>::shared_from_this());
+        GetImpl().update_impl(data);
+    }
+
+    template <typename T>
+    void Subscribe(T& subject)
+    {
+        subject.attach(Observer<ObserverImpl>::shared_from_this());
+    }
+
+  private:
+    ObserverImpl& GetImpl()
+    {
+        return static_cast<ObserverImpl&>(*this);
     }
 };
 
