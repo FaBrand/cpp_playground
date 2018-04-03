@@ -63,7 +63,7 @@ class Visitor
     void operator()(const TState& state) const
     {
         std::cout << "Visited unspecialized state with type: ";
-        GetName(state);
+        PrintTypeName(state);
     }
 };
 

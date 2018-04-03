@@ -8,7 +8,7 @@
 // GCC specfic method to get a rough representation of the absolute name of the type T
 // This is just a helper function for debugging.
 template <typename T>
-void GetName(const T&)
+void PrintTypeName(const T&)
 {
 #ifdef __GNUG__
     int status;
