@@ -5,3 +5,4 @@ project(observer_pattern
 
 add_subdirectory(./variant_raw_pointer)
 add_subdirectory(./variant_shared_pointer)
+add_subdirectory(./variant_shared_pointer_templated)
