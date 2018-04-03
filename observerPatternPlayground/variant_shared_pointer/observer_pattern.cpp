@@ -7,7 +7,7 @@ int main()
 
     {
         Subject data_provider{};
-        data_provider.UpdateSubjectWith(LowLevelInput{1, 2.5f});
+        data_provider(LowLevelInput{1, 2.5f});
 
         outer_user->Subscribe(data_provider);
 
@@ -19,12 +19,12 @@ int main()
 
             inner_user->Subscribe(data_provider);
 
-            data_provider.UpdateSubjectWith(LowLevelInput{1, 2.5f});
+            data_provider(LowLevelInput{1, 2.5f});
 
             std::cout << "Here the scope is left where client is meant to be alive" << '\n';
         }
 
-        data_provider.UpdateSubjectWith(LowLevelInput{2, 3.5f});
+        data_provider(LowLevelInput{2, 3.5f});
     }
 
     return 0;

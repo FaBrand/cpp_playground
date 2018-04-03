@@ -15,7 +15,7 @@ void Subject::CleanUpSubscribers()
         subscriber_.end());
 }
 
-void Subject::UpdateSubjectWith(LowLevelInput const& new_data)
+void Subject::operator()(LowLevelInput const& new_data)
 {
     std::cout << "Subject: Notifying subscribers with new data" << '\n';
 

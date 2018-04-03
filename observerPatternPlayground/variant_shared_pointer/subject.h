@@ -11,7 +11,7 @@ class Subject
 {
   public:
     void attach(std::shared_ptr<Observer> observer);
-    void UpdateSubjectWith(LowLevelInput const& new_data);
+    void operator()(LowLevelInput const& new_data);
 
   private:
     std::list<std::weak_ptr<Observer>> subscriber_{};
