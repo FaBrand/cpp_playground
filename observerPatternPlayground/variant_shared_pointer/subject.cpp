@@ -22,11 +22,11 @@ void Subject::operator()(LowLevelInput const& new_data)
     // This can be done either before or after the Subscribers have been notified
     CleanUpSubscribers();
 
-    for (auto& obs : subscriber_)
+    for (auto& subscriber : subscriber_)
     {
-        if (auto sptr = obs.lock())
+        if (auto sh_ptr = subscriber.lock())
         {
-            sptr->update(new_data);
+            sh_ptr->update(new_data);
         }
     }
 }
