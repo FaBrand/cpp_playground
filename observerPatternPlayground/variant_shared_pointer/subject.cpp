@@ -1,4 +1,5 @@
 #include "subject.h"
+#include <algorithm>
 #include <iostream>
 
 void Subject::attach(std::shared_ptr<Observer> observer)
@@ -7,17 +8,25 @@ void Subject::attach(std::shared_ptr<Observer> observer)
     subscriber_.push_back(observer);
 }
 
-void Subject::remove(std::shared_ptr<Observer> observer)
+void Subject::CleanUpSubscribers()
 {
-    std::cout << "Subject: Unsubscribed a observer" << '\n';
-    subscriber_.remove(observer);
+    subscriber_.erase(
+        std::remove_if(subscriber_.begin(), subscriber_.end(), [](const auto& sub) { return sub.expired(); }),
+        subscriber_.end());
 }
 
-void Subject::UpdateSubjectWith(LowLevelInput const& new_data) const
+void Subject::UpdateSubjectWith(LowLevelInput const& new_data)
 {
     std::cout << "Subject: Notifying subscribers with new data" << '\n';
+
+    // This can be done either before or after the Subscribers have been notified
+    CleanUpSubscribers();
+
     for (auto& obs : subscriber_)
     {
-        obs->update(new_data);
+        if (auto sptr = obs.lock())
+        {
+            sptr->update(new_data);
+        }
     }
 }

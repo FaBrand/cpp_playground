@@ -8,20 +8,9 @@
 class ConcreteObserver : public Observer
 {
   public:
-    ConcreteObserver() = default;
-    ConcreteObserver(const ConcreteObserver&) = default;
-    ConcreteObserver(ConcreteObserver&&) = default;
-    ConcreteObserver& operator=(const ConcreteObserver&) = default;
-    ConcreteObserver& operator=(ConcreteObserver&&) = default;
-    ~ConcreteObserver();
-
-    void Subscribe(std::shared_ptr<Subject> model);
-    void CancelSubscription();
+    void Subscribe(Subject& model);
 
     void update(LowLevelInput const& data) override;
-
-  private:
-    std::shared_ptr<Subject> subject_{nullptr};
 };
 
 #endif /* CLIENT_H */

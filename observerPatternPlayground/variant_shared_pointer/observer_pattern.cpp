@@ -3,20 +3,29 @@
 
 int main()
 {
-    auto data_provider{std::make_shared<Subject>()};
-    data_provider->UpdateSubjectWith(LowLevelInput{1, 2.5f});
+    auto outer_user{std::make_shared<ConcreteObserver>()};
 
     {
-        auto subject_user{std::make_shared<ConcreteObserver>()};
+        Subject data_provider{};
+        data_provider.UpdateSubjectWith(LowLevelInput{1, 2.5f});
 
-        subject_user->Subscribe(data_provider);
+        outer_user->Subscribe(data_provider);
 
-        data_provider->UpdateSubjectWith(LowLevelInput{1, 2.5f});
+        auto parallel_user{std::make_shared<ConcreteObserver>()};
+        parallel_user->Subscribe(data_provider);
 
-        std::cout << "Here the scope is left where client is meant to be alive" << '\n';
+        {
+            auto inner_user{std::make_shared<ConcreteObserver>()};
+
+            inner_user->Subscribe(data_provider);
+
+            data_provider.UpdateSubjectWith(LowLevelInput{1, 2.5f});
+
+            std::cout << "Here the scope is left where client is meant to be alive" << '\n';
+        }
+
+        data_provider.UpdateSubjectWith(LowLevelInput{2, 3.5f});
     }
-
-    data_provider->UpdateSubjectWith(LowLevelInput{1, 2.5f});
 
     return 0;
 }

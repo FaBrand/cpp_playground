@@ -1,30 +1,9 @@
 #include "concrete_observer.h"
 #include <iostream>
 
-ConcreteObserver::~ConcreteObserver()
+void ConcreteObserver::Subscribe(Subject& sub)
 {
-    std::cout << "ConcreteObserver destroyed" << '\n';
-    CancelSubscription();
-}
-
-void ConcreteObserver::Subscribe(std::shared_ptr<Subject> sub)
-{
-    // Using this there is a circular dependency from the subject to the observer
-    // Therefore neither of them would get destroyed --> leak
-    // subject_ = sub;
-
-    sub->attach(shared_from_this());
-}
-
-void ConcreteObserver::CancelSubscription()
-{
-    if (subject_)
-    {
-        // Is never called since subject_ is
-        subject_->remove(shared_from_this());
-    }
-
-    subject_ = nullptr;
+    sub.attach(shared_from_this());
 }
 
 void ConcreteObserver::update(const LowLevelInput& data)
