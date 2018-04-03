@@ -1,4 +1,4 @@
-# Some remarks that did are still itching
+# Some remarks that are still itching
 
 In this variant the Subject is specialized for the concrete observer.
 The use of CRTP in this case forces the subject to know of the concrete observer ate compiletime.
