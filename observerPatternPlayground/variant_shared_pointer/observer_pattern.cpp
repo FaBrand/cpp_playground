@@ -1,4 +1,5 @@
 #include "concrete_observer.h"
+#include "low_level_input.h"
 #include "subject.h"
 
 int main()

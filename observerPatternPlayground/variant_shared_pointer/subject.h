@@ -4,8 +4,9 @@
 #include <iostream>
 #include <list>
 #include <memory>
-#include "low_level_input.h"
-#include "observer.h"
+
+struct LowLevelInput;
+class Observer;
 
 class Subject
 {

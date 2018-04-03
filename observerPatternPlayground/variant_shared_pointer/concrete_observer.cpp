@@ -1,10 +1,7 @@
 #include "concrete_observer.h"
 #include <iostream>
 
-void ConcreteObserver::Subscribe(Subject& sub)
-{
-    sub.attach(shared_from_this());
-}
+#include "low_level_input.h"
 
 void ConcreteObserver::update(const LowLevelInput& data)
 {
