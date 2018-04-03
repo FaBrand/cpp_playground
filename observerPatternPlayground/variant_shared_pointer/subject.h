@@ -14,9 +14,9 @@ class Subject
     void operator()(LowLevelInput const& new_data);
 
   private:
-    std::list<std::weak_ptr<Observer>> subscriber_{};
+    std::list<std::weak_ptr<Observer>> subscribers_{};
 
-    void CleanUpSubscribers();
+    void RemoveDeadSubscibers();
 };
 
 #endif /* SUBJECT_H */
