@@ -1,15 +1,31 @@
 #include "udp_server_dynamic_buffer.h"
 #include <iostream>
 
-UdpServerDynamicBuffer::UdpServerDynamicBuffer()
-    : io_service_(), socket_(io_service_, udp::endpoint(udp::v4(), kServerDefaultPort))
-{
-    StartReceive();
-}
-
 UdpServerDynamicBuffer::~UdpServerDynamicBuffer()
 {
     Stop();
+}
+
+void UdpServerDynamicBuffer::Start()
+{
+    StartReceive();
+    StartServiceAsynchronously();
+}
+
+void UdpServerDynamicBuffer::Stop()
+{
+    GracefullyStopService();
+    PrepareServiceForNextStart();
+}
+
+bool UdpServerDynamicBuffer::IsRunning() const
+{
+    return !io_service_.stopped();
+}
+
+void UdpServerDynamicBuffer::RequestStop()
+{
+    io_service_.stop();
 }
 
 void UdpServerDynamicBuffer::StartReceive()
@@ -27,14 +43,14 @@ void UdpServerDynamicBuffer::HandleReceive(const boost::system::error_code& erro
     }
 
     ProcessNewMessage();
-
+    SignalSlots();
     StartReceive();
 }
 
 void UdpServerDynamicBuffer::ProcessNewMessage()
 {
     const std::size_t available_bytes{socket_.available()};
-    Message recv_buffer(available_bytes);
+    UdpMessage recv_buffer(available_bytes);
 
     boost::system::error_code receive_error;
     const boost::asio::socket_base::message_flags receive_flags{0};
@@ -51,53 +67,26 @@ void UdpServerDynamicBuffer::ProcessNewMessage()
     }
 }
 
-void UdpServerDynamicBuffer::UpdateMessageBufferWith(Message& new_message)
+void UdpServerDynamicBuffer::SignalSlots() const
+{
+    signal_.emit(GetLastMessageBytes());
+}
+
+void UdpServerDynamicBuffer::UpdateMessageBufferWith(UdpMessage& new_message)
 {
     std::lock_guard<std::mutex> buffer_lock(buffer_access_);
     last_received_message_.swap(new_message);
 }
 
-std::string UdpServerDynamicBuffer::GetLastMessageAsString() const
-{
-    std::lock_guard<std::mutex> buffer_lock(buffer_access_);
-    return std::string(last_received_message_.begin(), last_received_message_.end());
-}
-
-UdpServerDynamicBuffer::Message UdpServerDynamicBuffer::GetLastMessageBytes() const
+UdpServerDynamicBuffer::UdpMessage UdpServerDynamicBuffer::GetLastMessageBytes() const
 {
     std::lock_guard<std::mutex> buffer_lock(buffer_access_);
     return last_received_message_;
 }
 
-void UdpServerDynamicBuffer::Start()
-{
-    if (IsServiceRunning())
-    {
-        return;
-    }
-
-    StartServiceAsynchronously();
-}
-
-bool UdpServerDynamicBuffer::IsServiceRunning() const
-{
-    return thread_ != nullptr;
-}
-
 void UdpServerDynamicBuffer::StartServiceAsynchronously()
 {
     thread_.reset(new boost::thread([this]() { io_service_.run(); }));
-}
-
-void UdpServerDynamicBuffer::Stop()
-{
-    if (!IsServiceRunning())
-    {
-        return;
-    }
-
-    GracefullyStopService();
-    PrepareServiceForNextStart();
 }
 
 void UdpServerDynamicBuffer::GracefullyStopService()
@@ -110,9 +99,4 @@ void UdpServerDynamicBuffer::PrepareServiceForNextStart()
 {
     io_service_.reset();
     thread_.reset();
-}
-
-bool UdpServerDynamicBuffer::IsRunning() const
-{
-    return IsServiceRunning();
 }

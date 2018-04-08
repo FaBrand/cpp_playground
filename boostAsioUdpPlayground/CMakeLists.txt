@@ -20,6 +20,7 @@ target_link_libraries(asio_utils
     PUBLIC
         Boost::system
         Boost::thread
+        signals_slots::signal
 )
 
 add_executable(${PROJECT_NAME}

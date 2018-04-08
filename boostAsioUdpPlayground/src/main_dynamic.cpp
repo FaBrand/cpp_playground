@@ -9,24 +9,21 @@ int main()
 {
     std::cout << "Listening" << std::endl;
     UdpServerDynamicBuffer server;
-    server.Start();
 
-    while (server.IsRunning())
-    {
-        using namespace std::chrono_literals;
-        std::this_thread::sleep_for(100ms);
-
-        const auto msg{server.GetLastMessageBytes()};
-
+    server.register_receiver([&server](const auto& msg) {
         if (msg.size() > 0)
         {
             std::cout << "Received: " << std::to_string(msg.front()) << std::endl;
-
-            if (msg.front() > 100)
+            if (msg.front() >= 100)
             {
-                server.Stop();
+                server.RequestStop();
             }
         }
+    });
+
+    server.Start();
+    while (server.IsRunning())
+    {
     }
 
     std::cout << "Finished" << std::endl;

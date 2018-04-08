@@ -8,42 +8,48 @@
 #include <string>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
+#include "signals/signal.h"
 
 using boost::asio::ip::udp;
 
 class UdpServerDynamicBuffer
 {
-    typedef std::vector<std::uint8_t> Message;
+    typedef std::vector<std::uint8_t> UdpMessage;
 
   public:
-    UdpServerDynamicBuffer();
     ~UdpServerDynamicBuffer();
     UdpServerDynamicBuffer& operator=(const UdpServerDynamicBuffer&) = delete;
 
     void Start();
     void Stop();
+    void RequestStop();
     bool IsRunning() const;
-    std::string GetLastMessageAsString() const;
-    UdpServerDynamicBuffer::Message GetLastMessageBytes() const;
+    template <typename... Arg>
+    void register_receiver(Arg&&... arg)
+    {
+        signal_.connect(std::forward<Arg>(arg)...);
+    }
 
   private:
-    static const std::uint32_t kServerDefaultPort{4567};
+    Signal<const UdpMessage&> signal_;
 
     mutable std::mutex buffer_access_;
     std::unique_ptr<boost::thread> thread_;
-    boost::asio::io_service io_service_;
+    boost::asio::io_service io_service_{};
 
-    udp::socket socket_;
+    static const std::uint32_t kServerDefaultPort{4567};
+    udp::socket socket_{io_service_, udp::endpoint(udp::v4(), kServerDefaultPort)};
     udp::endpoint remote_endpoint_;
 
-    Message last_received_message_;
+    UdpMessage last_received_message_;
+    UdpServerDynamicBuffer::UdpMessage GetLastMessageBytes() const;
 
     void StartReceive();
     void HandleReceive(const boost::system::error_code& error, std::size_t bytes_transferred);
+    void SignalSlots() const;
 
-    void UpdateMessageBufferWith(Message& new_message);
+    void UpdateMessageBufferWith(UdpMessage& new_message);
     void ProcessNewMessage();
-    bool IsServiceRunning() const;
     void StartServiceAsynchronously();
     void PrepareServiceForNextStart();
     void GracefullyStopService();
