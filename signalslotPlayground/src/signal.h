@@ -15,6 +15,12 @@ class Signal
         slots_.push_back(funclike);
     }
 
+    template <typename T>
+    void connect(void (T::*func)(Args...), T* instance)
+    {
+        connect([=](Args... args) { (instance->*func)(args...); });
+    }
+
     void emit(const Args&... args) const
     {
         for (auto const& fun : slots_)
