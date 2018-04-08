@@ -9,6 +9,7 @@ find_package(Boost 1.58 REQUIRED COMPONENTS system thread)
 
 add_library(asio_utils
     ./src/udp_server.cpp
+    ./src/udp_server_synchronous.cpp
     ./src/udp_server_dynamic_buffer.cpp
 )
 
@@ -28,6 +29,15 @@ add_executable(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
+    asio_utils
+    Boost::system
+)
+
+add_executable(${PROJECT_NAME}_synchronous
+    ./src/main.cpp
+)
+
+target_link_libraries(${PROJECT_NAME}_synchronous
     asio_utils
     Boost::system
 )
