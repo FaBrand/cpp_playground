@@ -8,7 +8,9 @@ template <typename... Args>
 class Signal
 {
   public:
-    void connect(std::function<void(Args...)> funclike)
+    using callable_t = void (*)(Args...);
+
+    void connect(std::function<void(Args...)> const& funclike)
     {
         slots_.push_back(funclike);
     }
