@@ -1,4 +1,4 @@
-#include "signal.h"
+#include "signals/signal.h"
 #include <cstring>
 #include <iostream>
 #include "listener.h"
