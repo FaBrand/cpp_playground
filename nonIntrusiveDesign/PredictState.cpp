@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <variant>
 
 struct LongitudinalState
 {
@@ -16,6 +17,7 @@ struct GlobalState
 };
 
 using LongitudinalTrajectory = std::vector<LongitudinalState>;
+std::vector<std::variant<LongitudinalState, GlobalState>> tube;
 
 LongitudinalState Integrate(LongitudinalState const& state)
 {
@@ -62,6 +64,7 @@ std::ostream& operator<<(std::ostream& os, LongitudinalTrajectory const& traject
 
 int main()
 {
+    // Create states and trajectories of different types
     LongitudinalState long_state{0., 1.};
     GlobalState global_state{};
 
@@ -72,8 +75,6 @@ int main()
     Integrate(trajectory, long_state);
     std::cout << trajectory << "\n";
 
-    // LongitudinalTrajectory trajectory;
-    // trajectory.push_back(state);
-
-    // Print(trajectory);
+    tube.push_back(long_state);
+    tube.push_back(global_state);
 }
