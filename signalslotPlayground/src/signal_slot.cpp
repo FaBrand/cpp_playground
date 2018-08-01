@@ -2,6 +2,7 @@
 #include <cstring>
 #include <iostream>
 #include "listener.h"
+#include "publisher.h"
 
 void Function()
 {
@@ -29,6 +30,10 @@ int main()
     // This helper would do the same. It still doubles the actual type which is already
     // available in the signal instance
     signal.connect(static_cast<Signal<>::callable_t>(Function));
+
+    // This works since connect is overloaded for Signal::callable_t
+    connect(signal, Function);
+
 
     signal.connect(&Listener::slot1, &listener);
 

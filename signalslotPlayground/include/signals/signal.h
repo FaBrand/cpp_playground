@@ -39,4 +39,11 @@ void connect(SIGNAL& concrete_signal, SLOT&&... concrete_slot)
 {
     concrete_signal.connect(std::forward<SLOT>(concrete_slot)...);
 }
+
+template<typename SIGNAL>
+void connect(SIGNAL& concrete_signal, typename SIGNAL::callable_t concrete_slot)
+{
+    concrete_signal.connect(concrete_slot);
+}
+
 #endif /* SIGNAL_H */
