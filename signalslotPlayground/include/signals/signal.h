@@ -33,4 +33,10 @@ class Signal
     std::list<std::function<void(Args...)>> slots_;
 };
 
+
+template<typename SIGNAL, typename ... SLOT>
+void connect(SIGNAL& concrete_signal, SLOT&&... concrete_slot)
+{
+    concrete_signal.connect(std::forward<SLOT>(concrete_slot)...);
+}
 #endif /* SIGNAL_H */
