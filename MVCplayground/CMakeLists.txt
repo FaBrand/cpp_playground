@@ -5,6 +5,9 @@ project(ModelViewControllerPlayground
 
 add_executable(${PROJECT_NAME}
     ./src/mvc_main.cpp
+    ./src/model.cpp
+    ./src/view.cpp
+    ./src/controller.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -15,5 +18,6 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
         utils::utils
+        signals_slots::signal
 )
 
