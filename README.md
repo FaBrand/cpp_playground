@@ -8,9 +8,8 @@ The main reason behind creating this was personal learning and playing around wi
 Simply copy paste
 
 ```bash
-mkdir _build && cd $_
-cmake ../ -GNinja -DCMAKE_EXPORT_COMPILE_COMMANDS=On
-ninja
+cmake -B_build -H. -GNinja -DCMAKE_EXPORT_COMPILE_COMMANDS=On
+ninja -C _build
 ```
 
 # Disclaimer
