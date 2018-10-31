@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <variant>
 
 struct LongitudinalState
 {
@@ -7,7 +8,7 @@ struct LongitudinalState
     double dotx;
 };
 
-struct GlobalState:
+struct GlobalState
 {
     double x;
     double y;
@@ -16,8 +17,9 @@ struct GlobalState:
 };
 
 using LongitudinalTrajectory = std::vector<LongitudinalState>;
+std::vector<std::variant<LongitudinalState, GlobalState>> tube;
 
-LongitudinalState Predict(LongitudinalState const& state)
+LongitudinalState Integrate(LongitudinalState const& state)
 {
     LongitudinalState new_state{};
     new_state.x += state.x + state.dotx;
@@ -25,7 +27,7 @@ LongitudinalState Predict(LongitudinalState const& state)
     return new_state;
 };
 
-GlobalState Predict(GlobalState const& state)
+GlobalState Integrate(GlobalState const& state)
 {
     GlobalState new_state{};
     new_state.x += state.x + state.dotx;
@@ -35,32 +37,44 @@ GlobalState Predict(GlobalState const& state)
     return new_state;
 };
 
-std::ostream& operator<<(std::ostream& os, State const& state)
+void Integrate(LongitudinalTrajectory& trajectory, const LongitudinalState& current_state)
 {
-    return os << state.x << " " << state.y;
+    double dt = 0.;
+    for (auto& state : trajectory)
+    {
+        dt++;
+        state.x = current_state.x + dt * current_state.dotx;
+        state.dotx = current_state.dotx;
+    };
+};
+
+std::ostream& operator<<(std::ostream& os, LongitudinalState const& state)
+{
+    return os << state.x << " " << state.dotx;
+};
+
+std::ostream& operator<<(std::ostream& os, LongitudinalTrajectory const& trajectory)
+{
+    for (auto const& state : trajectory)
+    {
+        os << state << "\n";
+    }
+    return os;
 };
 
 int main()
 {
-    LongitudinalState long_state{};
+    // Create states and trajectories of different types
+    LongitudinalState long_state{0., 1.};
     GlobalState global_state{};
 
-    auto new_long_state = Predict(long_state);
-    auto new_global_state = Predict(global_state);
+    new_long_state = Predict(long_state);
+    new_global_state = Predict(global_state);
 
-    new_long_state = long_state.Predict();
-    new_global_state = global_state.Predict();
-    std::vector<State> all_states;
-    all_states.push_back(long_state);
-    all_states.push_back(global_state);
-    for (auto state : all_states)
-    {
-        state.Predict();
-    }
+    LongitudinalTrajectory trajectory(10, LongitudinalState{});
+    Integrate(trajectory, long_state);
+    std::cout << trajectory << "\n";
 
-    // LongitudinalTrajectory trajectory;
-    // trajectory.push_back(state);
-
-    // Predict(trajectory);
-    // Print(trajectory);
+    tube.push_back(long_state);
+    tube.push_back(global_state);
 }
