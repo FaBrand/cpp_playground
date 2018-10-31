@@ -45,8 +45,18 @@ int main()
     LongitudinalState long_state{};
     GlobalState global_state{};
 
-    new_long_state = Predict(long_state);
-    new_global_state = Predict(global_state);
+    auto new_long_state = Predict(long_state);
+    auto new_global_state = Predict(global_state);
+
+    new_long_state = long_state.Predict();
+    new_global_state = global_state.Predict();
+    std::vector<State> all_states;
+    all_states.push_back(long_state);
+    all_states.push_back(global_state);
+    for (auto state : all_states)
+    {
+        state.Predict();
+    }
 
     // LongitudinalTrajectory trajectory;
     // trajectory.push_back(state);
