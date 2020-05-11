@@ -1,3 +1,10 @@
+/*This is a natural and known continuation of the std::variant/std::visitor
+ * pattern called overload pattern that is also new to C++17:
+ * https://dzone.com/articles/two-lines-of-code-and-three-c17-features-the-overl
+ * This allowed me to remove the second interface layer in the behaviours of the
+ * previous example because now each behaviour gets the data it requires. Again,
+ * notice how there is not a single pointer or an abstract interface here too.*/
+
 #include <iostream>
 #include <variant>
 #include <vector>
