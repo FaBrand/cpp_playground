@@ -6,3 +6,4 @@ project(variant
 add_executable(variant variant.cpp)
 add_executable(variant2 variant2.cpp)
 add_executable(variant3 variant3.cpp)
+add_executable(variant4 variant4.cpp)
