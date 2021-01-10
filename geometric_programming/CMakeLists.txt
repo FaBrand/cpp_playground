@@ -3,4 +3,4 @@ project(variant
   LANGUAGES CXX
 )
 
-add_executable(ranges segment_intersection.cpp)
+add_executable(segment_intersection segment_intersection.cpp)
