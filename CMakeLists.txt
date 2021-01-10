@@ -21,4 +21,5 @@ add_subdirectory(boostMsmPlayground)
 add_subdirectory(constrained_se3)
 add_subdirectory(misc)
 add_subdirectory(functional_programming)
+add_subdirectory(geometric_programming)
 
