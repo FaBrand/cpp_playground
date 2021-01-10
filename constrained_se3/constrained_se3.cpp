@@ -33,19 +33,18 @@ template <typename Frame>
 struct Euclidian {
     Euclidian(double value) { data = value; };
 
-    std::variant<World, Base, Control> frame_;
+    std::variant<World, Base, Control> frame;
     double data{0};
 };
 
 template <typename GoalFrame, typename Frame>
 void Rotate(Euclidian<Frame>& vec, const SO3<GoalFrame, Frame>& rot){
     vec.data += rot.data;
-    vec.frame_ = GoalFrame{};
+    vec.frame = GoalFrame{};
 }
 
 template <typename T1, typename T2>
 Euclidian<T1> operator*(const SE3<T1, T2>& se3, const Euclidian<T2>& pos) {
-
     Euclidian<T1> new_pos{.data = se3.data*pos.data};
     return new_pos;
 }
