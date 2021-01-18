@@ -10,7 +10,6 @@ struct Foot {};
 struct World {};
 struct Control {};
 
-
 template <typename GoalFrame, typename OriginFrame>
 struct SO3 {
     SO3(double value) { data = value; };
