@@ -76,6 +76,6 @@ int main() {
 
     State state = StaticWalk{};
     Event event = EventWalk{};
-    std::visit(Transitions{}, state, event);
+     std::visit(Transitions{}, state, event);
     return 0;
 }

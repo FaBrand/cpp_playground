@@ -2,15 +2,15 @@
 #define FREE_CONTEXT
 
 #include <functional>
+#include <string>
 
-class FreeContext
-{
-  public:
+class FreeContext {
+   public:
     FreeContext() = default;
     void SetStrategy(std::function<void(std::string)> strategy);
     void ExecuteStrategy();
 
-  private:
+   private:
     std::function<void(std::string)> strategy_;
     std::string data_ = "myself";
 };

@@ -2,8 +2,8 @@
 #include <iostream>
 #include <string_view>
 #include <type_traits>
-#include <vector>
 #include <variant>
+#include <vector>
 
 struct Base {};
 struct Foot {};
@@ -37,21 +37,27 @@ struct Euclidian {
 };
 
 template <typename GoalFrame, typename Frame>
-void Rotate(Euclidian<Frame>& vec, const SO3<GoalFrame, Frame>& rot){
+void Rotate(Euclidian<Frame>& vec, const SO3<GoalFrame, Frame>& rot) {
     vec.data += rot.data;
     vec.frame = GoalFrame{};
 }
 
 template <typename T1, typename T2>
 Euclidian<T1> operator*(const SE3<T1, T2>& se3, const Euclidian<T2>& pos) {
-    Euclidian<T1> new_pos{.data = se3.data*pos.data};
+    Euclidian<T1> new_pos{.data = se3.data * pos.data};
     return new_pos;
 }
 
 template <typename T1, typename T2, typename T3>
 SE3<T1, T3> operator*(const SE3<T1, T2>& M1, const SE3<T2, T3> M2) {
-    SE3<T1, T3> new_se3{.data = M1.data*M2.data};
+    SE3<T1, T3> new_se3{.data = M1.data * M2.data};
     return new_se3;
+}
+
+template <typename T1, typename T2>
+Euclidian<T1> operator+(const SE3<T1, T2>& se3, const Euclidian<T2>& pos) {
+    Euclidian<T1> new_pos{.data = se3.data * pos.data};
+    return new_pos;
 }
 
 int main() {

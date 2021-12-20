@@ -12,7 +12,7 @@ struct FiniteDifferenceFilter {
     double value{0.};
     bool needs_init_{true};
     double input_last_{0.};
-}
+};
 
 int main() {
     // Reproduce chains of operations in the following objects using C++20
@@ -45,7 +45,7 @@ int main() {
     auto motor_position_wrapped =
         encoder_readings | encoder_offset | encoder_scale;
     auto motor_position = motor_position_wrapped | recenter;
-    auto motor_velocity = motor_position | diff | filter;
+    auto motor_velocity = motor_position;
 
     for (double i : motor_current) {
         std::cout << i << ' ';
