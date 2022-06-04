@@ -3,4 +3,4 @@ project(computational_graph
   LANGUAGES CXX
 )
 
-add_executable(static_lemo_server static_lemo_server.cpp)
+add_executable(static_graph static_graph.cpp)
