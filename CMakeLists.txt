@@ -23,4 +23,5 @@ add_subdirectory(misc)
 # add_subdirectory(functional_programming)
 add_subdirectory(geometric_programming)
 # add_subdirectory(computational_graph)
+add_subdirectory(proxqp)
 
