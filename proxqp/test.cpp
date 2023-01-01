@@ -2,11 +2,11 @@
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
 
-auto solve(const Eigen::MatrixXd& H,  //
-           const Eigen::VectorXd& g,  //
-           const Eigen::MatrixXd& A,  //
-           const Eigen::VectorXd& b   //
-           ) -> Eigen::VectorXd {
+auto solveLagrangian(const Eigen::MatrixXd& H,  //
+                     const Eigen::VectorXd& g,  //
+                     const Eigen::MatrixXd& A,  //
+                     const Eigen::VectorXd& b   //
+                     ) -> Eigen::VectorXd {
     constexpr double mue = 0.1;
     Eigen::Vector2d x = Eigen::Vector2d::Zero();
     Eigen::Vector2d y = Eigen::Vector2d::Zero();
@@ -16,8 +16,6 @@ auto solve(const Eigen::MatrixXd& H,  //
         Eigen::VectorXd ga = g + A.transpose() * (y - mue * b);
         x = -Ha.inverse() * ga;
         y = y + 1.0 / mue * (A * x - b);
-        std::cout << "x: " << x.transpose() << std::endl;
-        std::cout << "y: " << y.transpose() << std::endl;
     }
     return x;
 }
@@ -32,7 +30,7 @@ TEST_CASE("Simple Least Squares", "[ProxQP]") {
     Eigen::Vector2d b;
     b << 0, -1;
 
-    Eigen::VectorXd result = solve(H, g, A, b);
+    Eigen::VectorXd result = solveLagrangian(H, g, A, b);
 
     Eigen::Vector2d expected_result;
     expected_result << 0, -1;
