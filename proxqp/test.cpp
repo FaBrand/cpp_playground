@@ -1,3 +1,4 @@
+// TODO: Switch to doctest and integrate into production code
 #include <Eigen/Dense>
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
@@ -18,6 +19,16 @@ auto solveLagrangian(const Eigen::MatrixXd& H,  //
         y = y + 1.0 / mue * (A * x - b);
     }
     return x;
+}
+
+auto computeGradientPDAL(const Eigen::MatrixXd& H,  //
+                         const Eigen::VectorXd& g,  //
+                         const Eigen::MatrixXd& A,  //
+                         const Eigen::VectorXd& b   //
+                         ) -> Eigen::VectorXd {
+    // TODO: Build KKT matrix and factorize. It is not yet clear how the matrix
+    // is being built from the model.
+    // TODO: Get solve function from ldl
 }
 
 TEST_CASE("Simple Least Squares", "[ProxQP]") {
