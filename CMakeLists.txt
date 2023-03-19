@@ -23,6 +23,6 @@ add_subdirectory(misc)
 # add_subdirectory(functional_programming)
 add_subdirectory(geometric_programming)
 add_subdirectory(proxqp)
-add_subdirectory(hardware_abstraction)
+# add_subdirectory(hardware_abstraction)
 add_subdirectory(computational_graph)
 
