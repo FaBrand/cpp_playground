@@ -15,6 +15,7 @@
 /********************************************************************************/
 /********************************************************************************/
 /* Header files */
+#include <stdint.h>
 #include <stdio.h>
 
 /********************************************************************************/
@@ -31,24 +32,21 @@
 /********************************************************************************/
 
 /** Port expander, individual pin states */
-typedef enum
-{
-    PORTEXP_PIN_STATE__CLR,     /**< GND/Clear */
-    PORTEXP_PIN_STATE__SET,     /**< VCC/Set   */
+typedef enum {
+    PORTEXP_PIN_STATE__CLR, /**< GND/Clear */
+    PORTEXP_PIN_STATE__SET, /**< VCC/Set   */
 
 } ePORTEXP_PinState_t;
 
 /** Driver Errors data */
-typedef struct
-{
-    uint8_t    u8ErrBitSet;     /**< Latching error bits */
-    uint8_t    u8ErrCnt;        /**< Occurrence count */
+typedef struct {
+    uint8_t u8ErrBitSet; /**< Latching error bits */
+    uint8_t u8ErrCnt;    /**< Occurrence count */
 
 } stPORTEXP_ErrData_t;
 
 /********************************************************************************/
 /* Public Functions */
-
 
 /**
  * @brief     PORTEXP_Init
@@ -60,7 +58,6 @@ typedef struct
  *
  */
 void PORTEXP_Init(void);
-
 
 /**
  * @brief     PORTEXP_UpdatePinBuffer
@@ -75,10 +72,9 @@ void PORTEXP_Init(void);
  * @return      None
  *
  */
-void PORTEXP_UpdatePinBuffer(
-        const uint32_t u32PortExpId,
-        const uint8_t u8PinNum,
-        const ePORTEXP_PinState_t ePinState );
+void PORTEXP_UpdatePinBuffer(const uint32_t u32PortExpId,
+                             const uint8_t u8PinNum,
+                             const ePORTEXP_PinState_t ePinState);
 
 /**
  * @brief     PORTEXP_UpdatePortBuffer
@@ -92,9 +88,8 @@ void PORTEXP_UpdatePinBuffer(
  * @return      None
  *
  */
-void PORTEXP_UpdatePortBuffer(
-        const uint32_t u32PortExpId,
-        const uint16_t u16PortValue );
+void PORTEXP_UpdatePortBuffer(const uint32_t u32PortExpId,
+                              const uint16_t u16PortValue);
 
 /**
  * @brief     PORTEXP_SyncBuffer
@@ -108,8 +103,7 @@ void PORTEXP_UpdatePortBuffer(
  * @return      uint16_t     - Buffer value after synchronization
  *
  */
-uint16_t PORTEXP_SyncBuffer(
-        const uint32_t u32PortExpId );
+uint16_t PORTEXP_SyncBuffer(const uint32_t u32PortExpId);
 
 /**
  * @brief     PORTEXP_InspectPortBuffer
@@ -122,8 +116,7 @@ uint16_t PORTEXP_SyncBuffer(
  * @return      uint16_t     - Buffer value
  *
  */
-uint16_t PORTEXP_InspectPortBuffer(
-        const uint32_t u32PortExpId );
+uint16_t PORTEXP_InspectPortBuffer(const uint32_t u32PortExpId);
 
 /**
  * @brief     PORTEXP_InspectPinBuffer
@@ -136,9 +129,8 @@ uint16_t PORTEXP_InspectPortBuffer(
  * @return      uint16_t     - Buffer value
  *
  */
-ePORTEXP_PinState_t PORTEXP_InspectPinBuffer(
-        const uint32_t u32PortExpId,
-        const uint8_t u8PinNum );
+ePORTEXP_PinState_t PORTEXP_InspectPinBuffer(const uint32_t u32PortExpId,
+                                             const uint8_t u8PinNum);
 
 /**
  * @brief     PORTEXP_ClearErrors
@@ -152,7 +144,6 @@ ePORTEXP_PinState_t PORTEXP_InspectPinBuffer(
  */
 void PORTEXP_ClearErrors(void);
 
-
 /**
  * @brief     PORTEXP_InspectErrorsData
  * @details
@@ -163,6 +154,5 @@ void PORTEXP_ClearErrors(void);
  *
  */
 stPORTEXP_ErrData_t PORTEXP_InspectErrorsData(void);
-
 
 #endif /* INC_INTFC_H_ */

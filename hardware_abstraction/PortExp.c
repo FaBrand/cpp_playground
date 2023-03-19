@@ -15,8 +15,8 @@
 /* Header files */
 #include <stdio.h>
 
-#include "portexp_cfg.h"
-#include "portexp.h"
+#include "PortExp_cfg.h"
+#include "PortExp.h"
 
 /********************************************************************************/
 /********************************************************************************/
